@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+@theme {
+  --color-cream: #fef9e7;
+  --color-forest-500: #16a34a;
+  --color-forest-700: #15803d;
+  --color-forest-900: #14532d;
+  --font-serif: "Merriweather", Georgia, "Times New Roman", serif;
+  --font-sans: "Inter", Arial, Helvetica, sans-serif;
+}
+
+body {
+  background: #fef9e7;
+  color: #1c1917;
+  font-family: "Inter", Arial, Helvetica, sans-serif;
+}
+
+h1, h2, h3 {
+  font-family: "Merriweather", Georgia, serif;
+}
