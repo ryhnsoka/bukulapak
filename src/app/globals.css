@@ -1,20 +1,81 @@
 @import "tailwindcss";
 
-@theme {
+@theme inline {
   --color-cream: #fef9e7;
+  --color-paper: #f4efe0;
+  --color-warm-border: #e7e0cc;
+  --color-forest-50: #f0fdf4;
+  --color-forest-100: #dcfce7;
   --color-forest-500: #16a34a;
   --color-forest-700: #15803d;
+  --color-forest-800: #166534;
   --color-forest-900: #14532d;
-  --font-serif: "Merriweather", Georgia, "Times New Roman", serif;
-  --font-sans: "Inter", Arial, Helvetica, sans-serif;
+  --font-serif: var(--font-merriweather), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-inter), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
 body {
-  background: #fef9e7;
+  background-color: #fef9e7;
   color: #1c1917;
-  font-family: "Inter", Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
 }
 
 h1, h2, h3 {
-  font-family: "Merriweather", Georgia, serif;
+  font-family: var(--font-serif);
+  text-wrap: balance;
+}
+
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid #15803d;
+  outline-offset: 2px;
+}
+
+.skip-link {
+  position: fixed;
+  left: 0.75rem;
+  top: -4rem;
+  z-index: 60;
+  background-color: #14532d;
+  color: #ffffff;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: top 150ms ease;
+}
+
+.skip-link:focus-visible {
+  top: 0.75rem;
+}
+
+[popover]:not(:is(:popover-open, .\:popover-open)) {
+  display: none;
+}
+
+[popover]:is(:popover-open, .\:popover-open) {
+  display: block;
+}
+
+dialog:modal {
+  overscroll-behavior: contain;
+}
+
+dialog::backdrop {
+  overflow: hidden;
+  overscroll-behavior: contain;
+  background-color: rgba(28, 25, 23, 0.62);
+  backdrop-filter: blur(2px);
+}
+
+.shelf-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #d6d3d1 transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0.001ms !important;
+    animation-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }

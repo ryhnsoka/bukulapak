@@ -1,26 +1,116 @@
+'use client';
+
+import { Suspense, useEffect, useId, useRef, useState } from 'react';
+import { usePathname } from 'next/navigation';
+
 export default function ContactButtons() {
+  return (
+    <Suspense fallback={null}>
+      <ContactButtonsInner />
+    </Suspense>
+  );
+}
+
+function ContactButtonsInner() {
+  const pathname = usePathname();
+  const [expanded, setExpanded] = useState(false);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const popoverRef = useRef<HTMLDivElement>(null);
+  const popId = useId();
+
   const wa = process.env.NEXT_PUBLIC_WA_NUMBER ?? '6281234567890';
   const email = process.env.NEXT_PUBLIC_CS_EMAIL ?? 'cs@bukulapak.id';
+
+  useEffect(() => {
+    const pop = popoverRef.current;
+    const btn = triggerRef.current;
+    if (!pop || !btn) return;
+
+    const place = () => {
+      const r = btn.getBoundingClientRect();
+      pop.style.position = 'fixed';
+      pop.style.right = `${Math.max(8, Math.round(window.innerWidth - r.right))}px`;
+      pop.style.bottom = `${Math.max(8, Math.round(window.innerHeight - r.top + 8))}px`;
+      pop.style.top = 'auto';
+      pop.style.left = 'auto';
+    };
+
+    const onToggle = (e: Event) => {
+      const open = (e as ToggleEvent).newState === 'open';
+      setExpanded(open);
+      if (open) place();
+    };
+
+    pop.addEventListener('toggle', onToggle);
+    return () => pop.removeEventListener('toggle', onToggle);
+  }, []);
+
+  if (pathname.startsWith('/chat')) {
+    return null;
+  }
+
+  function handleFallbackClick() {
+    if (Object.hasOwn(HTMLElement.prototype, 'popover')) return;
+    const pop = popoverRef.current;
+    const btn = triggerRef.current;
+    if (!pop || !btn) return;
+    const open = pop.classList.toggle(':popover-open');
+    setExpanded(open);
+    if (open) {
+      const r = btn.getBoundingClientRect();
+      pop.style.position = 'fixed';
+      pop.style.right = `${Math.max(8, Math.round(window.innerWidth - r.right))}px`;
+      pop.style.bottom = `${Math.max(8, Math.round(window.innerHeight - r.top + 8))}px`;
+    }
+  }
+
   return (
-    <div className="fixed bottom-6 right-6 flex flex-col items-end gap-2 z-20">
-      <a
-        href={`https://wa.me/${wa}?text=${encodeURIComponent('Halo CS BukuLapak, saya butuh bantuan')}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        title="Chat WhatsApp CS"
-        className="bg-[#25D366] text-white p-4 rounded-full shadow-xl hover:scale-110 hover:shadow-2xl transition-all duration-300 flex items-center justify-center animate-bounce"
+    <div className="fixed bottom-4 right-4 z-20">
+      <button
+        ref={triggerRef}
+        type="button"
+        aria-expanded={expanded}
+        aria-controls={popId}
+        onClick={handleFallbackClick}
+        popoverTarget={popId}
+        className="flex items-center gap-2 bg-stone-900 text-white px-4 py-2.5 rounded-full text-xs font-semibold shadow-lg hover:bg-stone-800 transition cursor-pointer"
       >
-        <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z" />
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
+          />
         </svg>
-      </a>
-      <a
-        href={`mailto:${email}?subject=${encodeURIComponent('Bantuan BukuLapak')}`}
-        title="Email CS"
-        className="bg-stone-900 text-white px-4 py-2 rounded-full shadow-lg hover:scale-105 hover:shadow-xl transition-all duration-300 text-xs font-semibold"
+        <span>Bantuan</span>
+      </button>
+
+      <div
+        ref={popoverRef}
+        id={popId}
+        popover="auto"
+        className="w-64 bg-white text-stone-800 border border-stone-200 rounded-xl shadow-xl p-3.5 text-xs m-0"
       >
-        Email CS
-      </a>
+        <p className="font-bold text-stone-900 mb-1">Pusat Bantuan BukuLapak</p>
+        <p className="text-stone-500 mb-3">Butuh bantuan transaksi atau lapor kendala?</p>
+        <div className="flex flex-col gap-2">
+          <a
+            href={`https://wa.me/${wa}?text=${encodeURIComponent('Halo CS BukuLapak, saya butuh bantuan')}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full text-center px-3 py-2 rounded-lg bg-forest-700 text-cream font-semibold hover:bg-forest-900 transition"
+          >
+            Chat WhatsApp CS
+          </a>
+          <a
+            href={`mailto:${email}?subject=${encodeURIComponent('Bantuan BukuLapak')}`}
+            className="w-full text-center px-3 py-2 rounded-lg border border-stone-300 text-stone-700 font-medium hover:bg-stone-50 transition"
+          >
+            Email ({email})
+          </a>
+        </div>
+      </div>
     </div>
   );
 }

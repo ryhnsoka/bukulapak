@@ -13,6 +13,21 @@ const RULES: [RegExp, string][] = [
   [/fiction|novel|fiksi|literature|stories/i, 'Fiksi'],
 ];
 
+const GENRE_TO_CATEGORY: Record<string, string> = {
+  Fantasi: 'Fantasy',
+  'Fiksi Ilmiah': 'Science',
+  Misteri: 'Mystery',
+  'Pengembangan Diri': 'Self-Help',
+  Biografi: 'Biography',
+  Sejarah: 'History',
+  'Fiksi Indonesia': 'Fiksi Indonesia',
+  Fiksi: 'Fiction',
+};
+
+export function genreFilterCategory(displayGenre: string): string {
+  return GENRE_TO_CATEGORY[displayGenre] ?? '';
+}
+
 export function genreOf(categories: string[] | null | undefined): string {
   const cats = (categories ?? []).join(' ');
   for (const [re, genre] of RULES) {
@@ -21,14 +36,30 @@ export function genreOf(categories: string[] | null | undefined): string {
   return 'Lainnya';
 }
 
-export function groupByGenre<T extends { categories?: string[] | null }>(books: T[]): { genre: string; books: T[] }[] {
+export function groupByGenre<T extends { categories?: string[] | null }>(
+  books: T[]
+): { genre: string; books: T[] }[] {
   const map = new Map<string, T[]>();
   for (const b of books) {
     const g = genreOf(b.categories);
     if (!map.has(g)) map.set(g, []);
     map.get(g)!.push(b);
   }
-  const order = ['Fantasi', 'Fiksi', 'Fiksi Indonesia', 'Fiksi Ilmiah', 'Misteri', 'Horor', 'Romansa', 'Pengembangan Diri', 'Biografi', 'Sejarah', 'Anak', 'Religi', 'Lainnya'];
+  const order = [
+    'Fiksi Indonesia',
+    'Fantasi',
+    'Fiksi',
+    'Fiksi Ilmiah',
+    'Misteri',
+    'Horor',
+    'Romansa',
+    'Pengembangan Diri',
+    'Biografi',
+    'Sejarah',
+    'Anak',
+    'Religi',
+    'Lainnya',
+  ];
   return [...map.entries()]
     .map(([genre, items]) => ({ genre, books: items }))
     .sort((a, b) => order.indexOf(a.genre) - order.indexOf(b.genre));

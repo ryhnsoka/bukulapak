@@ -1,46 +1,53 @@
 'use client';
 
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import Link from 'next/link';
 import { api, type Listing, type Order } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
+import { useToast } from './ToastProvider';
 
-export default function OrderBox({ listing }: { listing: Listing }) {
+export default function OrderBox({
+  listing,
+  onOrdered,
+}: {
+  listing: Listing;
+  onOrdered?: (order: Order) => void;
+}) {
   const { user, token } = useAuth();
-  const [name, setName] = useState(user?.name ?? '');
+  const { showToast } = useToast();
+  const [nameDraft, setNameDraft] = useState<string | null>(null);
   const [note, setNote] = useState('');
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  const nameId = useId();
+  const noteId = useId();
+  const name = nameDraft ?? user?.name ?? '';
+
   if (!user) {
-    return (
-      <Link
-        href="/login"
-        className="block text-center bg-forest-700 text-cream px-6 py-3 rounded-lg font-medium hover:bg-forest-900 transition shadow"
-      >
-        Login untuk Membeli
-      </Link>
-    );
+    return null;
   }
 
   if (user.id === listing.user_id) {
-    return <p className="text-sm text-gray-500 bg-stone-100 rounded-xl p-4">Ini listing milikmu.</p>;
+    return null;
   }
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (!name.trim()) return;
+    if (!name.trim() || !token) return;
     setError('');
     setLoading(true);
     try {
       const res = await api.createOrder(
         { listing_id: listing.id, buyer_name: name.trim(), buyer_note: note.trim() || undefined },
-        token!
+        token
       );
       setOrder(res.data.order);
-    } catch (err: any) {
-      setError(err.message ?? 'Gagal membuat pesanan');
+      showToast(`Pesanan ${res.data.order.code} dibuat!`, 'success');
+      onOrdered?.(res.data.order);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Gagal membuat pesanan');
     } finally {
       setLoading(false);
     }
@@ -51,61 +58,87 @@ export default function OrderBox({ listing }: { listing: Listing }) {
     const msg = `Halo ${listing.user.name}, saya ${order.buyer_name} baru saja memesan "${listing.book.title}" (${order.code}, ${
       order.price === 0 ? 'Gratis' : `Rp ${order.price.toLocaleString('id-ID')}`
     }) di BukuLapak. Apakah masih tersedia?`;
+
     return (
-      <div className="bg-green-50 border border-green-200 rounded-xl p-5">
-        <div className="text-4xl mb-2">✅</div>
-        <h3 className="font-bold text-forest-900 mb-1">Pesanan {order.code} dibuat!</h3>
-        <p className="text-sm text-gray-600 mb-4">
-          Status: {order.status_label ?? order.status}. Lanjutkan chat via WhatsApp penjual untuk deal (transfer/COD manual).
+      <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-5">
+        <p className="font-bold text-forest-900 mb-1">✅ Pesanan {order.code} dibuat!</p>
+        <p className="text-sm text-stone-700 mb-4">
+          Status: {order.status_label ?? order.status}. Lanjutkan koordinasi pembayaran/COD
+          lewat Chat BukuLapak{wa ? ' atau WhatsApp penjual' : ''}.
         </p>
-        {wa ? (
+        {wa && (
           <a
             href={`https://wa.me/${wa}?text=${encodeURIComponent(msg)}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 bg-[#25D366] text-white px-6 py-3 rounded-lg font-semibold hover:brightness-95 transition shadow"
+            className="flex items-center justify-center gap-2 bg-emerald-600 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-emerald-700 transition shadow-sm mb-3"
           >
             Chat Penjual via WhatsApp
           </a>
-        ) : (
-          <p className="text-sm text-gray-500">
-            Penjual belum mencantumkan WA — hubungi via{' '}
-            <Link href="/chat" className="underline text-forest-700">chat BukuLapak</Link>.
-          </p>
         )}
-        <Link href="/profil" className="block text-center text-sm underline text-gray-500 mt-3">
-          Lihat di Pesanan Saya
-        </Link>
+        <div className="flex flex-wrap gap-3 text-xs font-semibold">
+          <Link href="/chat" className="text-forest-700 underline">
+            Buka Chat BukuLapak
+          </Link>
+          <Link href="/profil" className="text-stone-700 underline">
+            Lihat di Pesanan Saya
+          </Link>
+        </div>
       </div>
     );
   }
 
   return (
-    <form onSubmit={submit} className="bg-white border border-gray-200 rounded-xl p-5 flex flex-col gap-3">
-      <h3 className="font-bold">Beli Langsung</h3>
-      <p className="text-sm text-gray-500">
-        Isi form order, pesanan tercatat, lalu chat penjual via WhatsApp.
-      </p>
-      <input
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        required
-        placeholder="Nama pembeli"
-        className="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-forest-700"
-      />
-      <textarea
-        value={note}
-        onChange={(e) => setNote(e.target.value)}
-        rows={2}
-        placeholder="Catatan (opsional): jadwal COD, metode transfer…"
-        className="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-forest-700"
-      />
-      {error && <p className="text-sm text-red-600">{error}</p>}
+    <form
+      onSubmit={submit}
+      className="bg-white border border-warm-border rounded-xl p-5 flex flex-col gap-3"
+    >
+      <div>
+        <h2 className="font-bold text-stone-900">Beli Langsung</h2>
+        <p className="text-xs text-stone-600 mt-0.5">
+          Pesanan tercatat dan buku otomatis di-reserve agar tidak dipesan orang lain.
+        </p>
+      </div>
+
+      <div>
+        <label htmlFor={nameId} className="block text-xs font-semibold text-stone-700 mb-1">
+          Nama pembeli
+        </label>
+        <input
+          id={nameId}
+          value={name}
+          onChange={(e) => setNameDraft(e.target.value)}
+          required
+          autoComplete="name"
+          placeholder="Nama lengkap"
+          className="w-full border border-stone-300 rounded-xl p-3 text-sm bg-white"
+        />
+      </div>
+
+      <div>
+        <label htmlFor={noteId} className="block text-xs font-semibold text-stone-700 mb-1">
+          Catatan untuk penjual (opsional)
+        </label>
+        <textarea
+          id={noteId}
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+          rows={2}
+          placeholder="Jadwal COD, area pertemuan, atau ekspedisi…"
+          className="w-full border border-stone-300 rounded-xl p-3 text-sm bg-white"
+        />
+      </div>
+
+      {error && <p className="text-xs text-red-700">{error}</p>}
+
       <button
+        type="submit"
         disabled={loading || !name.trim()}
-        className="bg-forest-700 text-cream px-6 py-3 rounded-lg font-semibold hover:bg-forest-900 transition shadow disabled:opacity-50"
+        className="bg-forest-700 text-cream px-6 py-3 rounded-xl text-sm font-semibold hover:bg-forest-900 transition shadow-sm disabled:opacity-50 cursor-pointer"
       >
-        {loading ? 'Memproses…' : `Pesan Sekarang • ${listing.price === 0 ? 'Gratis' : `Rp ${listing.price.toLocaleString('id-ID')}`}`}
+        {loading
+          ? 'Memproses…'
+          : `Pesan Sekarang • ${listing.price === 0 ? 'Gratis' : `Rp ${listing.price.toLocaleString('id-ID')}`}`}
       </button>
     </form>
   );

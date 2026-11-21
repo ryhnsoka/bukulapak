@@ -1,29 +1,51 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import ContactButtons from "@/components/ContactButtons";
-import { AuthProvider } from "@/lib/auth";
-import "./globals.css";
+import type { Metadata } from 'next';
+import { Inter, Merriweather } from 'next/font/google';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
+import ContactButtons from '@/components/ContactButtons';
+import { AuthProvider } from '@/lib/auth';
+import { ToastProvider } from '@/components/ToastProvider';
+import './globals.css';
 
-const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
-const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
+const merriweather = Merriweather({
+  subsets: ['latin'],
+  weight: ['400', '700', '900'],
+  variable: '--font-merriweather',
+  display: 'swap',
+});
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
-  title: "BukuLapak — Review & Jual Beli Buku Bekas",
-  description: "Platform diskusi, review, dan jual-beli buku bekas antar perorangan.",
+  title: {
+    default: 'BukuLapak — Review & Jual Beli Buku Bekas',
+    template: '%s | BukuLapak',
+  },
+  description:
+    'Platform komunitas pembaca untuk diskusi buku, review jujur, dan jual-beli buku bekas antarperorangan.',
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
-    <html lang="id" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col bg-cream text-stone-900">
-        <AuthProvider>
-          <Navbar />
-          <main className="flex-1">{children}</main>
-          <Footer />
-          <ContactButtons />
-        </AuthProvider>
+    <html lang="id" className={`${merriweather.variable} ${inter.variable} h-full antialiased`}>
+      <body className="min-h-full flex flex-col bg-cream text-stone-900 font-sans">
+        <ToastProvider>
+          <AuthProvider>
+            <a href="#main-content" className="skip-link">
+              Lewati ke konten utama
+            </a>
+            <Navbar />
+            <main id="main-content" tabIndex={-1} className="flex-1 outline-none">
+              {children}
+            </main>
+            <Footer />
+            <ContactButtons />
+          </AuthProvider>
+        </ToastProvider>
       </body>
     </html>
   );

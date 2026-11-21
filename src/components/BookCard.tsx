@@ -3,49 +3,73 @@ import Stars from './Stars';
 import type { Book } from '@/lib/api';
 
 const CARD =
-  'bg-white rounded-xl shadow-sm border border-gray-100 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-forest-500 overflow-hidden group flex flex-col h-full';
+  'bg-white rounded-xl shadow-sm border border-warm-border transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-forest-500 overflow-hidden flex flex-col h-full';
 
 export default function BookCard({ book }: { book: Book }) {
+  const sellersCount = book.active_listings_count ?? 0;
+  const minPrice = book.min_price;
+
   return (
-    <div className={CARD}>
-      <div className="w-full aspect-[2/3] overflow-hidden bg-gray-100 relative">
+    <article className={CARD}>
+      <Link
+        href={`/books/${book.id}`}
+        className="w-full aspect-[2/3] overflow-hidden bg-stone-100 block group"
+      >
         {book.cover_url ? (
           <img
             src={book.cover_url}
             alt={book.title}
             loading="lazy"
-            className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+            className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
           />
         ) : (
-          <div className="w-full h-full bg-forest-900/5 flex items-center justify-center px-4 text-center">
-            <p className="font-serif font-bold text-forest-900 line-clamp-3">{book.title}</p>
+          <div className="w-full h-full bg-forest-50 flex flex-col items-center justify-center px-4 text-center border-b border-warm-border">
+            <span className="text-xs uppercase tracking-wider text-forest-700 font-semibold mb-1.5">
+              BukuLapak
+            </span>
+            <p className="font-serif font-bold text-forest-900 line-clamp-3 text-sm sm:text-base">
+              {book.title}
+            </p>
           </div>
         )}
-        <div className="absolute inset-0 bg-forest-900/70 opacity-0 group-hover:opacity-100 transition duration-300 flex flex-col items-center justify-center gap-2 p-4">
-          <Link
-            href={`/books/${book.id}#review`}
-            className="bg-cream text-forest-900 text-sm font-semibold px-4 py-2 rounded-lg w-full text-center hover:bg-white transition"
-          >
-            💬 Lihat Review
-          </Link>
-          <Link
-            href={`/books/${book.id}#jual`}
-            className="border border-cream text-cream text-sm font-semibold px-4 py-2 rounded-lg w-full text-center hover:bg-cream hover:text-forest-900 transition"
-          >
-            🏷️ Beli Buku
-          </Link>
-        </div>
-      </div>
-      <div className="p-4 flex flex-col flex-1">
-        <Link href={`/books/${book.id}`} className="font-serif font-bold text-forest-900 leading-tight mb-1 truncate hover:underline">
+      </Link>
+
+      <div className="p-3.5 sm:p-4 flex flex-col flex-1">
+        <Link
+          href={`/books/${book.id}`}
+          className="font-serif font-bold text-sm sm:text-base text-forest-900 leading-snug mb-1 line-clamp-2 hover:underline"
+        >
           {book.title}
         </Link>
-        <p className="text-sm text-gray-500 mb-2">{book.authors?.join(', ')}</p>
-        <div className="mt-auto flex items-center gap-1 text-sm">
-          <Stars value={book.avg_rating} size="sm" />
-          <span className="text-gray-400 text-xs ml-1">({book.ratings_count ?? 0} ulasan)</span>
+        <p className="text-xs text-stone-600 mb-2 line-clamp-1">
+          {book.authors?.length
+            ? book.authors.join(', ')
+            : book.isbn
+              ? `ISBN ${book.isbn}`
+              : 'Penulis tidak diketahui'}
+        </p>
+
+        <div className="mt-auto space-y-2">
+          <div className="flex items-center gap-1 text-xs">
+            <Stars value={book.avg_rating} size="sm" />
+            <span className="text-stone-700 font-medium">
+              {book.avg_rating ? Number(book.avg_rating).toFixed(1) : '—'}
+            </span>
+            <span className="text-stone-500">({book.ratings_count ?? 0})</span>
+          </div>
+
+          {sellersCount > 0 && (
+            <div className="pt-2 border-t border-stone-100">
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-forest-50 text-forest-900">
+                {sellersCount} penjual
+                {typeof minPrice === 'number'
+                  ? ` • ${minPrice === 0 ? 'Gratis' : `mulai Rp ${minPrice.toLocaleString('id-ID')}`}`
+                  : ''}
+              </span>
+            </div>
+          )}
         </div>
       </div>
-    </div>
+    </article>
   );
 }
