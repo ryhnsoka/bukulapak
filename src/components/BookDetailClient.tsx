@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { trackViewBook } from '@/lib/analytics';
 import { api, type ApiError, type Book, type Review } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
 import BookDiscussions from './BookDiscussions';
@@ -23,6 +24,7 @@ export default function BookDetailClient({ bookId }: { bookId: string }) {
   const [likedIds, setLikedIds] = useState<Set<string>>(new Set());
   const [notFoundErr, setNotFoundErr] = useState(false);
   const [fetchError, setFetchError] = useState<string | null>(null);
+  const trackedBookIdRef = useRef<string | null>(null);
 
   const currentKey = `${bookId}:${refreshTick}`;
   const loading = loadedKey !== currentKey;
@@ -39,6 +41,10 @@ export default function BookDetailClient({ bookId }: { bookId: string }) {
         setNotFoundErr(false);
         setFetchError(null);
         setLoadedKey(currentKey);
+        if (trackedBookIdRef.current !== res.data.book.id) {
+          trackedBookIdRef.current = res.data.book.id;
+          trackViewBook(res.data.book);
+        }
       })
       .catch((err) => {
         if (cancelled) return;

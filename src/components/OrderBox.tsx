@@ -2,6 +2,7 @@
 
 import { useId, useState } from 'react';
 import Link from 'next/link';
+import { trackBeginCheckout } from '@/lib/analytics';
 import { api, type Listing, type Order } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
 import { useToast } from './ToastProvider';
@@ -43,6 +44,11 @@ export default function OrderBox({
         { listing_id: listing.id, buyer_name: name.trim(), buyer_note: note.trim() || undefined },
         token
       );
+      trackBeginCheckout({
+        listingId: listing.id,
+        price: listing.price,
+        condition: listing.condition,
+      });
       setOrder(res.data.order);
       showToast(`Pesanan ${res.data.order.code} dibuat!`, 'success');
       onOrdered?.(res.data.order);

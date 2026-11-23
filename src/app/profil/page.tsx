@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useState } from 'react';
 import Link from 'next/link';
+import { trackOrderStatusUpdated } from '@/lib/analytics';
 import {
   api,
   type Book,
@@ -143,6 +144,7 @@ export default function ProfilPage() {
     if (!token) return;
     try {
       const res = await api.updateOrderStatus(id, status, token);
+      trackOrderStatusUpdated(status);
       setSales((v) => v.map((o) => (o.id === id ? res.data.order : o)));
       const refreshedListings = await api.myListings(token);
       setListings(refreshedListings.data.data);

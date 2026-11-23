@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { trackContactSeller } from '@/lib/analytics';
 import type { Listing } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
 
@@ -46,6 +47,7 @@ export default function BuyViaWA({ listing, compact = false }: { listing: Listin
         href={`https://wa.me/${listing.wa_number}?text=${encodeURIComponent(msg)}`}
         target="_blank"
         rel="noopener noreferrer"
+        onClick={() => trackContactSeller('whatsapp', listing.id)}
         className="inline-flex items-center justify-center gap-1 border border-emerald-600 text-emerald-800 bg-white text-xs font-semibold px-3.5 py-2 rounded-xl hover:bg-emerald-50 transition"
       >
         WA
@@ -59,6 +61,7 @@ export default function BuyViaWA({ listing, compact = false }: { listing: Listin
         href={`https://wa.me/${listing.wa_number}?text=${encodeURIComponent(msg)}`}
         target="_blank"
         rel="noopener noreferrer"
+        onClick={() => trackContactSeller('whatsapp', listing.id)}
         className="flex items-center justify-center gap-2 bg-emerald-600 text-white px-5 py-3 rounded-xl text-sm font-semibold hover:bg-emerald-700 transition shadow-sm"
       >
         Beli via WhatsApp

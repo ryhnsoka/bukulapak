@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { trackSearch } from '@/lib/analytics';
 import { api, type Listing } from '@/lib/api';
 import { BOOK_CONDITIONS, getConditionSpec } from '@/lib/conditions';
 import ListingCard from '@/components/ListingCard';
@@ -139,6 +140,10 @@ function MarketplaceInner({
       page: '1',
       ...Object.fromEntries(Object.entries(overrides).map(([k, v]) => [k, String(v)])),
     };
+    const nextQ = values.q.trim();
+    if (nextQ && nextQ !== urlQ.trim()) {
+      trackSearch(nextQ, 'marketplace');
+    }
     Object.entries(values).forEach(([k, v]) => {
       if (v && !(k === 'sort' && v === 'newest') && !(k === 'page' && v === '1')) {
         next.set(k, v);

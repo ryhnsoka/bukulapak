@@ -2,6 +2,7 @@
 
 import { useId, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { trackSearch } from '@/lib/analytics';
 
 const QUICK_SUGGESTIONS = ['Laut Bercerita', 'Bumi Manusia', 'Filosofi Teras', 'Laskar Pelangi'];
 
@@ -12,8 +13,10 @@ export default function HomeSearch() {
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (!q.trim()) return;
-    router.push(`/books?q=${encodeURIComponent(q.trim())}`);
+    const term = q.trim();
+    if (!term) return;
+    trackSearch(term, 'home');
+    router.push(`/books?q=${encodeURIComponent(term)}`);
   }
 
   return (
@@ -44,7 +47,10 @@ export default function HomeSearch() {
           <button
             key={term}
             type="button"
-            onClick={() => router.push(`/books?q=${encodeURIComponent(term)}`)}
+            onClick={() => {
+              trackSearch(term, 'home');
+              router.push(`/books?q=${encodeURIComponent(term)}`);
+            }}
             className="px-3 py-1 rounded-full bg-white border border-stone-300 text-stone-700 hover:border-forest-700 hover:text-forest-900 transition cursor-pointer"
           >
             {term}

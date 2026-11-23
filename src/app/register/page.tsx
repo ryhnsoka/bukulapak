@@ -3,6 +3,7 @@
 import { useId, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { trackAuth } from '@/lib/analytics';
 import { useAuth } from '@/lib/auth';
 
 export default function RegisterPage() {
@@ -24,6 +25,7 @@ export default function RegisterPage() {
     setLoading(true);
     try {
       await register(name, email, password);
+      trackAuth('sign_up', 'email');
       router.push('/');
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Registrasi gagal.');

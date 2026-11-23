@@ -2,6 +2,7 @@
 
 import { useId, useState } from 'react';
 import Link from 'next/link';
+import { trackSubmitReview } from '@/lib/analytics';
 import { api, type Review } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
 import { useToast } from './ToastProvider';
@@ -53,6 +54,7 @@ export default function ReviewForm({
         { book_id: bookId, rating, title: title.trim(), content: content.trim(), is_spoiler: isSpoiler },
         token
       );
+      trackSubmitReview({ bookId, rating, hasSpoiler: isSpoiler });
       setTitle('');
       setContent('');
       setIsSpoiler(false);

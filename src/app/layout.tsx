@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { GoogleAnalytics } from '@next/third-parties/google';
 import { Inter, Merriweather } from 'next/font/google';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -30,6 +31,10 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {
+  const rawGaId = process.env.NEXT_PUBLIC_GA_ID?.trim() ?? '';
+  const gaId = /^G-[A-Z0-9]+$/i.test(rawGaId) ? rawGaId : '';
+  const gaDebug = process.env.NEXT_PUBLIC_GA_DEBUG === 'true';
+
   return (
     <html lang="id" className={`${merriweather.variable} ${inter.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-cream text-stone-900 font-sans">
@@ -47,6 +52,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
           </AuthProvider>
         </ToastProvider>
       </body>
+      {gaId ? <GoogleAnalytics gaId={gaId} debugMode={gaDebug} /> : null}
     </html>
   );
 }

@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { trackViewListing } from '@/lib/analytics';
 import { api, type ApiError, type Listing } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
 import { getConditionSpec, LISTING_STATUS_META } from '@/lib/conditions';
@@ -18,6 +19,7 @@ export default function ListingDetailClient({ listingId }: { listingId: string }
   const [listing, setListing] = useState<Listing | null>(null);
   const [notFoundErr, setNotFoundErr] = useState(false);
   const [fetchError, setFetchError] = useState<string | null>(null);
+  const trackedListingIdRef = useRef<string | null>(null);
 
   const currentKey = `${listingId}:${refreshTick}`;
   const loading = loadedKey !== currentKey;
@@ -32,6 +34,16 @@ export default function ListingDetailClient({ listingId }: { listingId: string }
         setNotFoundErr(false);
         setFetchError(null);
         setLoadedKey(currentKey);
+        if (trackedListingIdRef.current !== res.data.listing.id) {
+          trackedListingIdRef.current = res.data.listing.id;
+          trackViewListing({
+            id: res.data.listing.id,
+            book_id: res.data.listing.book_id,
+            title: res.data.listing.book.title,
+            price: res.data.listing.price,
+            condition: res.data.listing.condition,
+          });
+        }
       })
       .catch((err) => {
         if (cancelled) return;

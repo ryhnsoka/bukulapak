@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { trackUpdateReadingShelf } from '@/lib/analytics';
 import { api, type ShelfKey } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
 import { useToast } from './ToastProvider';
@@ -40,11 +41,13 @@ export default function ShelfButton({ bookId }: { bookId: string }) {
     try {
       if (value === '') {
         await api.removeShelf(bookId, token);
+        trackUpdateReadingShelf({ bookId, shelf: 'removed' });
         setCurrent(null);
         showToast('Buku dihapus dari rak baca.', 'info');
       } else {
         const shelf = value as ShelfKey;
         await api.upsertShelf(bookId, shelf, token);
+        trackUpdateReadingShelf({ bookId, shelf });
         setCurrent(shelf);
         const label = SHELVES.find((s) => s.key === shelf)?.label ?? shelf;
         showToast(`Disimpan ke rak "${label}".`, 'success');

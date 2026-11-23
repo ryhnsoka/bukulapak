@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useState } from 'react';
 import Link from 'next/link';
+import { trackJoinReadingClub } from '@/lib/analytics';
 import { api, type DiscussionTopic, type ReadingClub } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
 import ErrorState from '@/components/ErrorState';
@@ -98,6 +99,7 @@ export default function KomunitasPage() {
     if (!token) return;
     try {
       const res = await api.joinClub(id, token);
+      if (!res.alreadyJoined) trackJoinReadingClub(id);
       showToast(res.message, res.alreadyJoined ? 'info' : 'success');
       reloadCommunity();
     } catch (err: unknown) {

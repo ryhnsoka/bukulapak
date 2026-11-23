@@ -3,6 +3,7 @@
 import { Suspense, useId, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { trackAuth } from '@/lib/analytics';
 import { useAuth } from '@/lib/auth';
 
 const DEMO_ACCOUNTS = [
@@ -47,6 +48,7 @@ function LoginInner() {
     setLoading(true);
     try {
       await login(email, password);
+      trackAuth('login', 'email');
       router.push(safeNext);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Login gagal.');
@@ -60,6 +62,7 @@ function LoginInner() {
     setLoading(true);
     try {
       await loginDemo(acc.name, acc.email, 'password123');
+      trackAuth('login', 'demo');
       router.push(safeNext);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Login demo gagal.');

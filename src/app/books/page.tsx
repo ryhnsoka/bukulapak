@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { trackSearch } from '@/lib/analytics';
 import { api, type Book } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
 import { useToast } from '@/components/ToastProvider';
@@ -151,7 +152,9 @@ function BooksInner({ paramKey, urlQ, urlGenre, urlSort, urlPage }: BooksInnerPr
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    pushParams({ q: q.trim(), page: 1 });
+    const term = q.trim();
+    if (term) trackSearch(term, 'books');
+    pushParams({ q: term, page: 1 });
   }
 
   return (

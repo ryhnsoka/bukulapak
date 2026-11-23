@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Link from 'next/link';
+import { trackContactSeller } from '@/lib/analytics';
 import { api } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
 import { useToast } from './ToastProvider';
@@ -46,6 +47,7 @@ export default function ChatButton({
     setLoading(true);
     try {
       const res = await api.createConversation(listingId, token);
+      trackContactSeller('in_app_chat', listingId);
       router.push(`/chat/${res.data.conversation.id}`);
     } catch (err: unknown) {
       showToast(err instanceof Error ? err.message : 'Gagal memulai chat.', 'error');

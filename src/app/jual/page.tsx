@@ -2,6 +2,7 @@
 
 import { useId, useState } from 'react';
 import Link from 'next/link';
+import { trackPublishListing } from '@/lib/analytics';
 import { api } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
 import { BOOK_CONDITIONS, getConditionSpec } from '@/lib/conditions';
@@ -136,6 +137,13 @@ export default function JualPage() {
         token
       );
       await api.uploadListingImages(res.data.listing.id, photos, token);
+      trackPublishListing({
+        listingId: res.data.listing.id,
+        price: priceNum,
+        condition,
+        photosCount: photos.length,
+        isbnFormat: isbnCheck.format,
+      });
       showToast('Listing dan foto berhasil dipublikasikan!', 'success');
       setDone(res.data.listing.id);
     } catch (err: unknown) {
