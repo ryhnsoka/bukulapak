@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 import ListingDetailClient from '@/components/ListingDetailClient';
 
 export const metadata: Metadata = {
-  title: 'Detail Listing Buku Bekas',
+  title: 'Detail Listing',
   description: 'Lihat foto kondisi asli buku bekas, reputasi penjual, chat langsung, atau buat pesanan di BukuLapak.',
 };
 

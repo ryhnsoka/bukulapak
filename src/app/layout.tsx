@@ -23,8 +23,8 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: 'BukuLapak — Review & Jual Beli Buku Bekas',
-    template: '%s | BukuLapak',
+    default: 'BukuLapak',
+    template: '%s · BukuLapak',
   },
   description:
     'Platform komunitas pembaca untuk diskusi buku, review jujur, dan jual-beli buku bekas antarperorangan.',

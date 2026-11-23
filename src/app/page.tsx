@@ -4,7 +4,7 @@ import HomeClient from '@/components/HomeClient';
 import HomeSearch from '@/components/HomeSearch';
 
 export const metadata: Metadata = {
-  title: 'BukuLapak — Review & Jual Beli Buku Bekas',
+  title: { absolute: 'BukuLapak' },
   description:
     'Temukan cerita, baca review jujur dari sesama pembaca, dan jual-beli buku bekas langsung antarperorangan.',
 };

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Tentang BukuLapak',
+  title: 'Tentang',
   description: 'Mengenal cara kerja diskusi buku dan marketplace buku bekas langsung antarperorangan di BukuLapak.',
 };
 
