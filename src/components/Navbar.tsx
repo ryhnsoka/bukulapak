@@ -20,7 +20,7 @@ function isRouteActive(pathname: string, href: string) {
 function DesktopNavLinks() {
   const pathname = usePathname();
   return (
-    <div className="hidden md:flex items-center gap-2 text-sm">
+    <div className="hidden md:flex items-center gap-1 lg:gap-2 text-sm">
       {NAV_ITEMS.map((item) => {
         const active = isRouteActive(pathname, item.href);
         return (
@@ -28,7 +28,7 @@ function DesktopNavLinks() {
             key={item.href}
             href={item.href}
             aria-current={active ? 'page' : undefined}
-            className={`px-3 py-1.5 rounded-lg transition ${
+            className={`whitespace-nowrap px-2.5 lg:px-3 py-1.5 rounded-lg transition ${
               active
                 ? 'bg-forest-900 text-white font-bold shadow-[inset_0_-2px_0_#fef9e7]'
                 : 'text-cream/90 hover:text-white hover:bg-forest-900/50'
@@ -218,13 +218,13 @@ export default function Navbar() {
                 </div>
               </div>
             ) : ready ? (
-              <div className="hidden sm:flex items-center gap-3">
-                <Link href="/login" className="hover:text-white text-cream/95 transition">
+              <div className="hidden sm:flex items-center gap-3 shrink-0">
+                <Link href="/login" className="whitespace-nowrap hover:text-white text-cream/95 transition">
                   Login
                 </Link>
                 <Link
                   href="/register"
-                  className="bg-cream text-forest-700 px-4 py-1.5 rounded-lg font-semibold hover:bg-white transition shadow-sm"
+                  className="whitespace-nowrap bg-cream text-forest-700 px-3.5 lg:px-4 py-1.5 rounded-lg font-semibold hover:bg-white transition shadow-sm"
                 >
                   Daftar
                 </Link>

@@ -1,4 +1,7 @@
+'use client';
+
 import Link from 'next/link';
+import { BookCoverImage } from './BookCoverFallback';
 import Stars from './Stars';
 import type { Book } from '@/lib/api';
 
@@ -8,6 +11,11 @@ const CARD =
 export default function BookCard({ book }: { book: Book }) {
   const sellersCount = book.active_listings_count ?? 0;
   const minPrice = book.min_price;
+  const subtitle = book.authors?.length
+    ? book.authors.join(', ')
+    : book.isbn
+      ? `ISBN ${book.isbn}`
+      : undefined;
 
   return (
     <article className={CARD}>
@@ -15,23 +23,15 @@ export default function BookCard({ book }: { book: Book }) {
         href={`/books/${book.id}`}
         className="w-full aspect-[2/3] overflow-hidden bg-stone-100 block group"
       >
-        {book.cover_url ? (
-          <img
-            src={book.cover_url}
-            alt={book.title}
-            loading="lazy"
-            className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
-          />
-        ) : (
-          <div className="w-full h-full bg-forest-50 flex flex-col items-center justify-center px-4 text-center border-b border-warm-border">
-            <span className="text-xs uppercase tracking-wider text-forest-700 font-semibold mb-1.5">
-              BukuLapak
-            </span>
-            <p className="font-serif font-bold text-forest-900 line-clamp-3 text-sm sm:text-base">
-              {book.title}
-            </p>
-          </div>
-        )}
+        <BookCoverImage
+          key={book.cover_url ?? 'none'}
+          src={book.cover_url}
+          alt={book.title}
+          title={book.title}
+          subtitle={subtitle}
+          loading="lazy"
+          imgClassName="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+        />
       </Link>
 
       <div className="p-3.5 sm:p-4 flex flex-col flex-1">

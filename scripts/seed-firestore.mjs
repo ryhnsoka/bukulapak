@@ -123,7 +123,7 @@ const DEMO_BOOKS = [
     edition_label: 'Cetakan Reguler',
     description:
       'Kisah Biru Laut dan kawan-kawan aktivis mahasiswa 1998, serta penantian panjang keluarga yang kehilangan.',
-    cover_url: null,
+    cover_url: 'https://covers.openlibrary.org/b/id/10648285-L.jpg',
     categories: ['Fiction', 'Fiksi Indonesia', 'History'],
     page_count: 379,
   },
@@ -140,7 +140,7 @@ const DEMO_BOOKS = [
     edition_label: 'Edisi Pertama',
     description:
       'Kisah inspiratif sepuluh anak Belitung di SD Muhammadiyah yang berjuang meraih mimpi.',
-    cover_url: null,
+    cover_url: 'https://covers.openlibrary.org/b/id/7079796-L.jpg',
     categories: ['Fiction', 'Fiksi Indonesia'],
     page_count: 529,
   },
@@ -157,7 +157,7 @@ const DEMO_BOOKS = [
     edition_label: 'Tetralogi Buru #1',
     description:
       'Roman sejarah tentang Minke, pemuda pribumi yang menghadapi kolonialisme dengan pena dan hukum.',
-    cover_url: null,
+    cover_url: 'https://covers.openlibrary.org/b/id/6643692-L.jpg',
     categories: ['Fiction', 'Fiksi Indonesia', 'History'],
     page_count: 535,
   },
@@ -174,7 +174,7 @@ const DEMO_BOOKS = [
     edition_label: 'Cetakan Kompas',
     description:
       'Pengantar praktis filsafat Stoisisme Yunani-Romawi kuno untuk menghadapi kecemasan modern.',
-    cover_url: null,
+    cover_url: 'https://covers.openlibrary.org/b/id/15255806-L.jpg',
     categories: ['Self-Help', 'Philosophy'],
     page_count: 320,
   },
@@ -191,7 +191,7 @@ const DEMO_BOOKS = [
     edition_label: 'Edisi GPU',
     description:
       'Epik keluarga Dewi Ayu dengan balutan realisme magis dari masa kolonial hingga kemerdekaan.',
-    cover_url: null,
+    cover_url: 'https://covers.openlibrary.org/b/id/13903116-L.jpg',
     categories: ['Fiction', 'Fiksi Indonesia'],
     page_count: 478,
   },
@@ -208,7 +208,7 @@ const DEMO_BOOKS = [
     edition_label: 'Reguler',
     description:
       'Perjalanan Bujang menembus ekonomi bayangan hingga menemukan arti keluarga dan pulang.',
-    cover_url: null,
+    cover_url: 'https://covers.openlibrary.org/b/id/12905869-L.jpg',
     categories: ['Fiction', 'Fiksi Indonesia', 'Mystery'],
     page_count: 400,
   },
@@ -225,7 +225,7 @@ const DEMO_BOOKS = [
     edition_label: 'International Edition',
     description:
       'Panduan membangun kebiasaan baik melalui perubahan kecil yang berdampak majemuk.',
-    cover_url: null,
+    cover_url: 'https://covers.openlibrary.org/b/id/12539702-L.jpg',
     categories: ['Self-Help'],
     page_count: 320,
   },

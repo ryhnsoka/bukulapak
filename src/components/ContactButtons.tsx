@@ -65,7 +65,7 @@ function ContactButtonsInner() {
   }
 
   return (
-    <div className="fixed bottom-4 right-4 z-20">
+    <div className="fixed bottom-3 right-3 sm:bottom-4 sm:right-4 z-20">
       <button
         ref={triggerRef}
         type="button"

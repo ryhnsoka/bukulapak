@@ -6,6 +6,7 @@ import { trackViewBook } from '@/lib/analytics';
 import { api, type ApiError, type Book, type Review } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
 import BookDiscussions from './BookDiscussions';
+import { BookCoverImage } from './BookCoverFallback';
 import BuyViaWA from './BuyViaWA';
 import ChatButton from './ChatButton';
 import ErrorState from './ErrorState';
@@ -149,28 +150,34 @@ export default function BookDetailClient({ bookId }: { bookId: string }) {
       </nav>
 
       <div className="grid md:grid-cols-3 gap-8 mb-10">
-        <div className="max-w-xs mx-auto w-full">
-          {book.cover_url ? (
-            <img
-              src={book.cover_url}
-              alt={book.title}
-              className="w-full rounded-2xl shadow-lg border border-warm-border"
-            />
-          ) : (
-            <div className="w-full aspect-[2/3] bg-forest-50 border border-warm-border rounded-2xl flex flex-col items-center justify-center text-forest-900 font-serif text-xl font-bold px-6 text-center shadow-sm">
-              <span className="text-xs font-sans uppercase tracking-wider text-forest-700 mb-2">
-                BukuLapak
-              </span>
-              {book.title}
-            </div>
-          )}
+        <div className="max-w-[230px] sm:max-w-[250px] mx-auto md:mx-0 w-full aspect-[2/3] rounded-2xl overflow-hidden shadow-lg ring-1 ring-black/5 bg-stone-100">
+          <BookCoverImage
+            key={book.cover_url ?? 'none'}
+            src={book.cover_url}
+            alt={book.title}
+            title={book.title}
+            subtitle={
+              book.authors?.length
+                ? book.authors.join(', ')
+                : book.isbn
+                  ? `ISBN ${book.isbn}`
+                  : undefined
+            }
+            imgClassName="w-full h-full object-cover"
+          />
         </div>
 
         <div className="md:col-span-2">
           <h1 className="font-serif text-3xl sm:text-4xl text-forest-900 font-bold mb-1">
             {book.title}
           </h1>
-          <p className="text-stone-600 text-base mb-3">{book.authors?.join(', ')}</p>
+          <p className="text-stone-600 text-base mb-3">
+            {book.authors?.length
+              ? book.authors.join(', ')
+              : book.isbn
+                ? `ISBN ${book.isbn}`
+                : 'Penulis tidak diketahui'}
+          </p>
 
           <div className="flex items-center gap-2 mb-4">
             <Stars value={book.avg_rating} />

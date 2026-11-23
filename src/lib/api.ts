@@ -780,6 +780,9 @@ export const api = {
 
     const title = String(data.title ?? 'Tanpa Judul').trim();
     const authors = Array.isArray(data.authors) ? data.authors : [];
+    const autoCoverUrl =
+      data.cover_url ??
+      (normalizedIsbn ? `https://covers.openlibrary.org/b/isbn/${normalizedIsbn}-L.jpg` : null);
     const payload = {
       open_library_id: data.open_library_id ?? null,
       isbn: normalizedIsbn,
@@ -791,7 +794,7 @@ export const api = {
       format: data.format ?? null,
       edition_label: data.edition_label ?? null,
       description: data.description ?? null,
-      cover_url: data.cover_url ?? null,
+      cover_url: autoCoverUrl,
       categories: Array.isArray(data.categories) ? data.categories : [],
       page_count: typeof data.page_count === 'number' ? data.page_count : null,
       avg_rating: null,

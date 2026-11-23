@@ -1,4 +1,7 @@
+'use client';
+
 import Link from 'next/link';
+import { BookCoverImage } from './BookCoverFallback';
 import type { Listing } from '@/lib/api';
 import { LISTING_STATUS_META } from '@/lib/conditions';
 
@@ -18,41 +21,66 @@ export default function ListingCard({ listing }: { listing: Listing }) {
   const hasRealPhoto = Boolean(realPhoto && (listing.photos_count ?? 0) > 0);
   const displayImg = realPhoto ?? listing.book.cover_url;
   const statusMeta = LISTING_STATUS_META[listing.status];
+  const subtitle = listing.book.authors?.length
+    ? listing.book.authors.join(', ')
+    : listing.book.isbn
+      ? `ISBN ${listing.book.isbn}`
+      : undefined;
 
   return (
     <Link href={`/listings/${listing.id}`} className={CARD}>
-      <div className="relative w-full h-48 overflow-hidden bg-stone-100">
-        {displayImg ? (
-          <img
+      {hasRealPhoto ? (
+        <div className="relative w-full h-56 overflow-hidden bg-stone-100">
+          <BookCoverImage
+            key={displayImg ?? 'none'}
             src={displayImg}
-            alt={hasRealPhoto ? `Foto asli ${listing.book.title}` : listing.book.title}
+            alt={`Foto asli ${listing.book.title}`}
+            title={listing.book.title}
+            subtitle={subtitle}
             loading="lazy"
-            className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+            imgClassName="w-full h-full object-cover group-hover:scale-105 transition duration-300"
           />
-        ) : (
-          <div className="w-full h-full bg-forest-50 flex items-center justify-center text-forest-900 font-serif font-bold px-4 text-center text-sm">
-            {listing.book.title}
-          </div>
-        )}
 
-        <span
-          className={`absolute top-2 left-2 text-xs font-semibold px-2.5 py-0.5 rounded-full ${
-            hasRealPhoto
-              ? 'bg-stone-900/80 text-white'
-              : 'bg-amber-100 text-amber-900 border border-amber-200'
-          }`}
-        >
-          {hasRealPhoto ? '📷 Foto Asli' : 'Sampul Katalog'}
-        </span>
-
-        {listing.status !== 'active' && statusMeta && (
-          <span
-            className={`absolute top-2 right-2 text-xs font-semibold px-2.5 py-0.5 rounded-full ${statusMeta.badgeClass}`}
-          >
-            {statusMeta.label}
+          <span className="absolute top-2 left-2 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-stone-900/80 text-white">
+            📷 Foto Asli
           </span>
-        )}
-      </div>
+
+          {listing.status !== 'active' && statusMeta && (
+            <span
+              className={`absolute top-2 right-2 text-[10px] font-semibold px-2 py-0.5 rounded-full ${statusMeta.badgeClass}`}
+            >
+              {statusMeta.label}
+            </span>
+          )}
+        </div>
+      ) : (
+        <div className="w-full h-56 overflow-hidden bg-gradient-to-b from-stone-100 to-stone-200/70 flex flex-col p-2.5">
+          <div className="flex items-center justify-between gap-1.5 shrink-0 mb-2">
+            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-200 shadow-xs">
+              Sampul Katalog
+            </span>
+            {listing.status !== 'active' && statusMeta && (
+              <span
+                className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${statusMeta.badgeClass}`}
+              >
+                {statusMeta.label}
+              </span>
+            )}
+          </div>
+          <div className="flex-1 min-h-0 w-full flex items-center justify-center">
+            <BookCoverImage
+              key={displayImg ?? 'none'}
+              src={displayImg}
+              alt={listing.book.title}
+              title={listing.book.title}
+              subtitle={subtitle}
+              loading="lazy"
+              imgClassName="h-full w-auto max-w-full object-contain rounded shadow-md group-hover:scale-105 transition duration-300"
+              fallbackClassName="h-full aspect-[2/3] rounded shadow-md"
+            />
+          </div>
+        </div>
+      )}
 
       <div className="p-3.5 sm:p-4 flex flex-col flex-1">
         <h3 className="font-serif font-bold text-sm sm:text-base text-forest-900 leading-snug mb-1.5 line-clamp-2">
@@ -73,10 +101,10 @@ export default function ListingCard({ listing }: { listing: Listing }) {
         </div>
 
         <div className="mt-auto pt-2 border-t border-stone-100 flex items-center justify-between gap-2">
-          <span className="font-bold text-base sm:text-lg text-forest-900">
+          <span className="font-bold text-sm sm:text-base text-forest-900 whitespace-nowrap shrink-0">
             {listing.price === 0 ? 'Gratis' : `Rp ${listing.price.toLocaleString('id-ID')}`}
           </span>
-          <span className="text-xs text-stone-600 truncate">{listing.location_city}</span>
+          <span className="text-xs text-stone-600 min-w-0 truncate">{listing.location_city}</span>
         </div>
       </div>
     </Link>

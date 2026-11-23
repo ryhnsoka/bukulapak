@@ -5,7 +5,7 @@ export default function Footer() {
   const wa = process.env.NEXT_PUBLIC_WA_NUMBER ?? '6281234567890';
 
   return (
-    <footer className="bg-forest-700 text-cream mt-16 py-10 text-sm shadow-inner">
+    <footer className="bg-forest-700 text-cream mt-16 pt-10 pb-20 sm:pb-14 text-sm shadow-inner">
       <div className="max-w-6xl mx-auto px-4 grid gap-8 md:grid-cols-3">
         <div>
           <p className="font-serif font-bold text-lg mb-2">BukuLapak</p>

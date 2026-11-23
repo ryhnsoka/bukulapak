@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { BookCoverImage } from './BookCoverFallback';
 import { PhotoLightbox } from './Dialogs';
 
 export default function PhotoGallery({
@@ -17,25 +18,23 @@ export default function PhotoGallery({
   const [lightboxOpen, setLightboxOpen] = useState(false);
 
   if (!hasReal) {
-    if (fallbackCover) {
-      return (
-        <div>
-          <img
+    return (
+      <div className="max-w-[250px] mx-auto">
+        <div className="w-full aspect-[2/3] rounded-2xl overflow-hidden shadow-md border border-warm-border bg-stone-100">
+          <BookCoverImage
+            key={fallbackCover ?? 'none'}
             src={fallbackCover}
             alt={title}
-            className="w-full rounded-2xl shadow-md border border-warm-border"
+            title={title}
+            imgClassName="w-full h-full object-cover"
           />
+        </div>
+        {fallbackCover && (
           <p className="text-xs text-amber-900 bg-amber-50 border border-amber-200 rounded-xl px-3.5 py-2.5 mt-3">
             Penjual belum mengunggah foto fisik buku (menampilkan sampul katalog). Pastikan
             meminta foto kondisi asli lewat Chat sebelum transaksi.
           </p>
-        </div>
-      );
-    }
-
-    return (
-      <div className="w-full aspect-[2/3] bg-forest-50 border border-warm-border rounded-2xl flex items-center justify-center text-forest-900 font-serif text-xl font-bold px-6 text-center">
-        {title}
+        )}
       </div>
     );
   }
