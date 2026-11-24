@@ -144,10 +144,10 @@ export default function JualPage() {
         photosCount: photos.length,
         isbnFormat: isbnCheck.format,
       });
-      showToast('Listing dan foto berhasil dipublikasikan!', 'success');
+      showToast('Buku dan foto kondisi berhasil ditayangkan.', 'success');
       setDone(res.data.listing.id);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Gagal membuat listing');
+      setError(err instanceof Error ? err.message : 'Gagal menayangkan buku di lapak.');
     } finally {
       setSaving(false);
     }
@@ -155,7 +155,7 @@ export default function JualPage() {
 
   if (!ready) {
     return (
-      <div className="max-w-2xl mx-auto px-4 py-10 text-sm text-stone-500">
+      <div className="max-w-2xl mx-auto px-4 py-10 text-sm text-stone-600">
         Memeriksa sesi…
       </div>
     );
@@ -164,15 +164,15 @@ export default function JualPage() {
   if (!user) {
     return (
       <div className="max-w-md mx-auto px-4 py-16 text-center">
-        <h1 className="text-2xl font-bold font-serif text-forest-900 mb-2">Login untuk Menjual</h1>
+        <h1 className="type-page-title text-ink mb-2">Masuk untuk menjual</h1>
         <p className="text-stone-600 text-sm mb-6">
-          Kamu perlu login untuk pasang listing buku bekas.
+          Kamu perlu masuk dulu sebelum memasang buku di lapak.
         </p>
         <Link
           href="/login?next=/jual"
-          className="inline-block bg-forest-700 text-cream px-6 py-3 rounded-xl text-sm font-semibold hover:bg-forest-900 transition"
+          className="inline-block bg-forest-700 text-cream px-6 py-3 rounded-lg text-sm font-medium hover:bg-forest-900 transition-colors"
         >
-          Login
+          Masuk
         </Link>
       </div>
     );
@@ -181,25 +181,30 @@ export default function JualPage() {
   if (done) {
     return (
       <div className="max-w-md mx-auto px-4 py-16 text-center">
-        <div className="text-5xl mb-4" aria-hidden="true">✅</div>
-        <h1 className="text-2xl font-bold font-serif text-forest-900 mb-2">
-          Listing Berhasil Dibuat!
-        </h1>
+        <div
+          className="w-12 h-12 mx-auto mb-4 rounded-full bg-forest-100 text-forest-800 flex items-center justify-center"
+          aria-hidden="true"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <h1 className="type-page-title text-ink mb-2">Buku sudah tayang di lapak</h1>
         <p className="text-stone-600 text-sm mb-6">
-          Bukumu beserta foto kondisi aslinya sudah tampil di marketplace BukuLapak.
+          Foto kondisi dan detail bukumu sekarang bisa dilihat pembeli di Marketplace.
         </p>
         <div className="flex justify-center gap-3 flex-wrap">
           <Link
             href={`/listings/${done}`}
-            className="bg-forest-700 text-cream px-6 py-3 rounded-xl text-sm font-semibold hover:bg-forest-900 transition"
+            className="bg-forest-700 text-cream px-6 py-3 rounded-lg text-sm font-medium hover:bg-forest-900 transition-colors"
           >
-            Lihat Listing
+            Lihat halaman buku
           </Link>
           <Link
             href="/profil"
-            className="border border-stone-300 bg-white px-6 py-3 rounded-xl text-sm font-semibold hover:bg-stone-50 transition"
+            className="border border-input-border bg-white text-ink px-6 py-3 rounded-lg text-sm font-medium hover:bg-paper transition-colors"
           >
-            Kelola di Profil
+            Kelola di profil
           </Link>
         </div>
       </div>
@@ -210,21 +215,21 @@ export default function JualPage() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-10">
-      <h1 className="text-3xl font-bold font-serif text-forest-900 mb-2">Jual Buku Bekas</h1>
+      <h1 className="type-page-title text-ink mb-2">Jual buku bekas</h1>
       <p className="text-stone-600 text-sm mb-6">
-        Masukkan judul dan nomor ISBN buku, lalu lengkapi kondisi, foto asli, dan harga.
+        Isi judul dan nomor ISBN, lalu unggah foto kondisi asli serta harga jualnya.
       </p>
 
       <form
         onSubmit={submit}
-        className="bg-white border border-warm-border rounded-2xl p-5 flex flex-col gap-5"
+        className="bg-white border border-warm-border rounded-lg p-5 sm:p-6 flex flex-col gap-5"
       >
-        <div className="flex flex-col gap-4 pb-5 border-b border-stone-200">
-          <h2 className="font-bold text-stone-900">1. Identitas Buku</h2>
+        <div className="flex flex-col gap-4 pb-5 border-b border-warm-border">
+          <h2 className="font-sans font-semibold text-base text-ink">1. Identitas buku</h2>
 
           <div>
             <label htmlFor={titleId} className="block text-xs font-semibold text-stone-700 mb-1">
-              Judul Buku (wajib)
+              Judul buku (wajib)
             </label>
             <input
               id={titleId}
@@ -233,8 +238,8 @@ export default function JualPage() {
               required
               maxLength={500}
               placeholder="cth: Laut Bercerita"
-              className={`w-full border rounded-xl p-3 text-sm bg-white ${
-                titleTrimmed !== '' && !titleValid ? 'border-red-500' : 'border-stone-300'
+              className={`w-full border rounded-lg p-3 text-sm bg-white ${
+                titleTrimmed !== '' && !titleValid ? 'border-red-600' : 'border-input-border'
               }`}
             />
             {titleTrimmed !== '' && !titleValid && (
@@ -256,68 +261,72 @@ export default function JualPage() {
               aria-invalid={isbnTrimmed !== '' && !isbnCheck.valid}
               aria-describedby={isbnHintId}
               placeholder="cth: 978-602-424-694-5 atau 0306406152"
-              className={`w-full border rounded-xl p-3 text-sm bg-white ${
+              className={`w-full border rounded-lg p-3 text-sm bg-white font-mono ${
                 isbnTrimmed === ''
-                  ? 'border-stone-300'
+                  ? 'border-input-border'
                   : isbnCheck.valid
-                  ? 'border-green-600'
-                  : 'border-red-500'
+                  ? 'border-forest-700'
+                  : 'border-red-600'
               }`}
             />
             <p
               id={isbnHintId}
               className={`mt-1 text-xs ${
                 isbnTrimmed === ''
-                  ? 'text-stone-500'
+                  ? 'text-stone-600'
                   : isbnCheck.valid
-                  ? 'font-medium text-green-800'
+                  ? 'font-medium text-forest-800'
                   : 'text-red-700'
               }`}
             >
-              {isbnTrimmed === ''
-                ? 'Masukkan 10 atau 13 digit ISBN (tanda hubung - boleh ditulis atau dikosongkan).'
-                : isbnCheck.valid
-                ? `✓ ${isbnCheck.format} valid (${isbnCheck.normalized})`
-                : isbnCheck.error}
+              {isbnTrimmed === '' ? (
+                'Masukkan 10 atau 13 digit ISBN (tanda hubung boleh ditulis atau dikosongkan).'
+              ) : isbnCheck.valid ? (
+                <>
+                  {isbnCheck.format} valid (<span className="font-mono">{isbnCheck.normalized}</span>)
+                </>
+              ) : (
+                isbnCheck.error
+              )}
             </p>
           </div>
         </div>
 
         <div className="flex flex-col gap-4">
-          <h2 className="font-bold text-stone-900">2. Detail Jualan</h2>
+          <h2 className="font-sans font-semibold text-base text-ink">2. Detail jualan</h2>
 
           <div>
             <label htmlFor={editionId} className="block text-xs font-semibold text-stone-700 mb-1">
-              Info Edisi / Cetakan (opsional tapi disarankan)
+              Edisi atau cetakan (opsional)
             </label>
             <input
               id={editionId}
               value={editionNote}
               onChange={(e) => setEditionNote(e.target.value)}
-              placeholder="cth: Cetakan 2022, Paperback, Bahasa Indonesia"
-              className="w-full border border-stone-300 rounded-xl p-3 text-sm bg-white"
+              placeholder="cth: Cetakan 2022, sampul lunak, bahasa Indonesia"
+              className="w-full border border-input-border rounded-lg p-3 text-sm bg-white"
             />
           </div>
 
           <div>
             <label htmlFor={conditionId} className="block text-xs font-semibold text-stone-700 mb-1">
-              Kondisi Fisik Buku
+              Kondisi fisik buku
             </label>
             <select
               id={conditionId}
               value={condition}
               onChange={(e) => setCondition(e.target.value)}
-              className="w-full border border-stone-300 rounded-xl p-3 text-sm bg-white"
+              className="w-full border border-input-border rounded-lg p-3 text-sm bg-white"
             >
               {BOOK_CONDITIONS.map((c) => (
                 <option key={c.value} value={c.value}>
-                  {c.label} — {c.summary}
+                  {c.label}: {c.summary}
                 </option>
               ))}
             </select>
             {activeCondition && (
-              <div className="mt-2 bg-stone-50 border border-stone-200 rounded-xl p-3 text-xs text-stone-700">
-                <p className="font-semibold mb-1">
+              <div className="mt-2 bg-paper border border-warm-border rounded-lg p-3 text-xs text-stone-700">
+                <p className="font-semibold mb-1 text-ink">
                   Kriteria kondisi &ldquo;{activeCondition.label}&rdquo;:
                 </p>
                 <ul className="list-disc pl-4 space-y-0.5">
@@ -331,7 +340,7 @@ export default function JualPage() {
 
           <div>
             <label htmlFor={priceId} className="block text-xs font-semibold text-stone-700 mb-1">
-              Harga (Rp, 0 = gratis)
+              Harga (Rp, isi 0 jika gratis)
             </label>
             <input
               id={priceId}
@@ -341,18 +350,18 @@ export default function JualPage() {
               onChange={(e) => setPrice(e.target.value)}
               required
               placeholder="cth: 45000"
-              className="w-full border border-stone-300 rounded-xl p-3 text-sm bg-white"
+              className="w-full border border-input-border rounded-lg p-3 text-sm bg-white tabular-nums"
             />
             {price !== '' && Number(price) === 0 && (
-              <span className="inline-block mt-1.5 text-xs font-semibold text-green-800 bg-green-100 px-2.5 py-0.5 rounded-full">
-                Buku akan dilisting sebagai GRATIS
+              <span className="inline-block mt-1.5 text-xs font-medium text-forest-900 bg-forest-100 px-2.5 py-0.5 rounded-sm">
+                Buku akan ditayangkan gratis
               </span>
             )}
           </div>
 
           <div>
             <label htmlFor={cityId} className="block text-xs font-semibold text-stone-700 mb-1">
-              Kota / Kabupaten
+              Kota atau kabupaten
             </label>
             <input
               id={cityId}
@@ -360,11 +369,11 @@ export default function JualPage() {
               onChange={(e) => setCity(e.target.value)}
               required
               placeholder="cth: Jakarta Selatan"
-              className="w-full border border-stone-300 rounded-xl p-3 text-sm bg-white"
+              className="w-full border border-input-border rounded-lg p-3 text-sm bg-white"
             />
           </div>
 
-          <div className="border border-stone-200 rounded-xl p-3.5 bg-stone-50">
+          <div className="border border-warm-border rounded-lg p-3.5 bg-paper/70">
             <label
               htmlFor={waCheckId}
               className="flex items-start gap-2.5 text-sm cursor-pointer"
@@ -377,10 +386,10 @@ export default function JualPage() {
                 className="mt-1"
               />
               <span>
-                <strong>Bagikan nomor WhatsApp ke publik</strong>
-                <span className="block text-xs text-stone-500 mt-0.5">
-                  Opsional. Jika tidak dicentang, nomor kontakmu tetap privat dan pembeli
-                  menghubungimu lewat Chat real-time BukuLapak.
+                <strong>Tampilkan nomor WhatsApp di halaman lapak</strong>
+                <span className="block text-xs text-stone-600 mt-0.5">
+                  Opsional. Jika tidak dicentang, nomormu tidak ditampilkan dan pembeli menghubungi
+                  lewat chat di BukuLapak.
                 </span>
               </span>
             </label>
@@ -399,12 +408,12 @@ export default function JualPage() {
                   required={shareWa}
                   inputMode="numeric"
                   placeholder="cth: 6281234567890"
-                  className={`w-full border rounded-xl p-3 text-sm bg-white ${
+                  className={`w-full border rounded-lg p-3 text-sm bg-white font-mono ${
                     wa === ''
-                      ? 'border-stone-300'
+                      ? 'border-input-border'
                       : waValid
-                      ? 'border-green-600'
-                      : 'border-red-500'
+                      ? 'border-forest-700'
+                      : 'border-red-600'
                   }`}
                 />
                 {wa !== '' && !waValid && (
@@ -418,11 +427,11 @@ export default function JualPage() {
 
           <div>
             <label htmlFor={photosId} className="text-xs font-semibold text-stone-700 block">
-              Foto Asli Buku (wajib, 1–5 foto, format JPG/PNG/WebP, maks 2MB/foto)
+              Foto asli buku (wajib 1–5 foto, JPG/PNG/WebP, maks 2MB per foto)
             </label>
-            <p className="text-xs text-stone-500 mt-0.5 mb-2">
-              Foto sampul depan, punggung buku, dan halaman dalam agar pembeli yakin. Foto akan
-              dikompres otomatis sebelum disimpan.
+            <p className="text-xs text-stone-600 mt-0.5 mb-2">
+              Sertakan foto sampul, punggung, atau halaman dalam agar kondisi fisik terlihat jelas.
+              Ukuran gambar dikompres otomatis.
             </p>
             <input
               id={photosId}
@@ -430,11 +439,11 @@ export default function JualPage() {
               accept="image/jpeg,image/png,image/webp"
               multiple
               onChange={(e) => pickPhotos(e.target.files)}
-              className="block w-full border border-stone-300 rounded-xl p-3 text-xs bg-white file:mr-3 file:px-4 file:py-2 file:rounded-xl file:border-0 file:bg-forest-700 file:text-cream file:text-xs file:font-semibold"
+              className="block w-full border border-input-border rounded-lg p-3 text-xs bg-white file:mr-3 file:px-4 file:py-2 file:rounded-md file:border-0 file:bg-forest-700 file:text-cream file:text-xs file:font-medium cursor-pointer"
             />
             {photoError && <p className="text-xs text-red-700 mt-1">{photoError}</p>}
             {photos.length === 0 && (
-              <p className="mt-1 text-xs text-stone-500">
+              <p className="mt-1 text-xs text-stone-600">
                 Wajib unggah minimal 1 foto asli bukumu.
               </p>
             )}
@@ -447,7 +456,7 @@ export default function JualPage() {
                   <img
                     src={src}
                     alt={`Preview foto buku ${i + 1}`}
-                    className="w-full aspect-square object-cover rounded-xl border border-stone-200"
+                    className="w-full aspect-square object-cover rounded-lg border border-warm-border"
                   />
                   <button
                     type="button"
@@ -464,15 +473,15 @@ export default function JualPage() {
 
           <div>
             <label htmlFor={descId} className="block text-xs font-semibold text-stone-700 mb-1">
-              Deskripsi &amp; catatan kondisi jujur
+              Catatan kondisi buku
             </label>
             <textarea
               id={descId}
               value={desc}
               onChange={(e) => setDesc(e.target.value)}
               rows={3}
-              placeholder="Jelaskan kondisi halaman, coretan, atau kelengkapan secara jujur…"
-              className="w-full border border-stone-300 rounded-xl p-3 text-sm bg-white"
+              placeholder="Tulis kondisi halaman, lipatan, coretan, atau kelengkapan lainnya…"
+              className="w-full border border-input-border rounded-lg p-3 text-sm bg-white"
             />
           </div>
 
@@ -481,9 +490,9 @@ export default function JualPage() {
           <button
             type="submit"
             disabled={!formValid || saving}
-            className="bg-forest-700 text-cream rounded-xl p-3 text-sm font-semibold hover:bg-forest-900 transition disabled:opacity-50 cursor-pointer"
+            className="bg-forest-700 text-cream rounded-lg p-3 text-sm font-medium hover:bg-forest-900 transition-colors disabled:opacity-50 cursor-pointer"
           >
-            {saving ? 'Mengompres & Menyimpan…' : 'Pasang Listing'}
+            {saving ? 'Mengompres & menyimpan…' : 'Tayangkan di lapak'}
           </button>
         </div>
       </form>

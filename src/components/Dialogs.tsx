@@ -87,10 +87,10 @@ export function ConfirmDialog({
       ref={ref}
       aria-labelledby={titleId}
       onClose={handleClose}
-      className="rounded-2xl border border-stone-200 bg-white text-stone-900 p-0 max-w-md w-[calc(100%-2rem)] shadow-2xl m-auto"
+      className="rounded-lg border border-warm-border bg-white text-ink p-0 max-w-md w-[calc(100%-2rem)] shadow-2xl m-auto"
     >
       <form method="dialog" className="p-6">
-        <h2 id={titleId} className="font-serif text-xl font-bold text-stone-900 mb-2">
+        <h2 id={titleId} className="font-sans text-lg font-semibold text-ink mb-2">
           {title}
         </h2>
         <p className="text-sm text-stone-600 mb-6 leading-relaxed">{message}</p>
@@ -99,14 +99,14 @@ export function ConfirmDialog({
             type="submit"
             value="cancel"
             autoFocus
-            className="px-4 py-2 rounded-xl border border-stone-300 text-sm font-medium text-stone-700 hover:bg-stone-100 cursor-pointer"
+            className="px-4 py-2 rounded-lg border border-input-border text-sm font-medium text-ink hover:bg-paper cursor-pointer"
           >
             Batal
           </button>
           <button
             type="submit"
             value="confirm"
-            className={`px-4 py-2 rounded-xl text-sm font-semibold text-white cursor-pointer ${
+            className={`px-4 py-2 rounded-lg text-sm font-medium text-white cursor-pointer ${
               destructive
                 ? 'bg-red-600 hover:bg-red-700'
                 : 'bg-forest-700 hover:bg-forest-900'
@@ -174,36 +174,36 @@ export function ReportDialog({
       ref={ref}
       aria-labelledby={titleId}
       onClose={handleClose}
-      className="rounded-2xl border border-stone-200 bg-white text-stone-900 p-0 max-w-md w-[calc(100%-2rem)] shadow-2xl m-auto"
+      className="rounded-lg border border-warm-border bg-white text-ink p-0 max-w-md w-[calc(100%-2rem)] shadow-2xl m-auto"
     >
       <form onSubmit={handleFormSubmit} className="p-6 flex flex-col gap-4">
         <div>
-          <h2 id={titleId} className="font-serif text-xl font-bold text-stone-900 mb-1">
-            Laporkan Konten
+          <h2 id={titleId} className="font-sans text-lg font-semibold text-ink mb-1">
+            Laporkan konten
           </h2>
-          <p className="text-xs text-stone-500">Target: {targetLabel}</p>
+          <p className="text-xs text-stone-600">Target: {targetLabel}</p>
         </div>
 
         <div>
           <label htmlFor={categoryId} className="block text-xs font-semibold text-stone-700 mb-1">
-            Kategori Pelanggaran
+            Kategori pelanggaran
           </label>
           <select
             id={categoryId}
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            className="w-full border border-stone-300 rounded-xl px-3 py-2 text-sm bg-white"
+            className="w-full border border-input-border rounded-lg px-3 py-2 text-sm bg-white"
           >
             <option value="spoiler">Spoiler tidak ditandai</option>
             <option value="spam">Spam atau promosi melenceng</option>
-            <option value="kasar">Bahasa kasar / pelecehan</option>
-            <option value="penipuan">Indikasi penipuan / info palsu</option>
+            <option value="kasar">Bahasa kasar atau pelecehan</option>
+            <option value="penipuan">Indikasi penipuan atau info palsu</option>
           </select>
         </div>
 
         <div>
           <label htmlFor={reasonId} className="block text-xs font-semibold text-stone-700 mb-1">
-            Alasan Laporan
+            Alasan laporan
           </label>
           <textarea
             id={reasonId}
@@ -213,7 +213,7 @@ export function ReportDialog({
             value={reason}
             onChange={(e) => setReason(e.target.value)}
             placeholder="Jelaskan singkat alasan laporan (min. 5 karakter)…"
-            className="w-full border border-stone-300 rounded-xl px-3 py-2 text-sm bg-white"
+            className="w-full border border-input-border rounded-lg px-3 py-2 text-sm bg-white"
           />
         </div>
 
@@ -221,16 +221,16 @@ export function ReportDialog({
           <button
             type="button"
             onClick={() => ref.current?.close('')}
-            className="px-4 py-2 rounded-xl border border-stone-300 text-sm font-medium text-stone-700 hover:bg-stone-100 cursor-pointer"
+            className="px-4 py-2 rounded-lg border border-input-border text-sm font-medium text-ink hover:bg-paper cursor-pointer"
           >
             Batal
           </button>
           <button
             type="submit"
             disabled={submitting || reason.trim().length < 5}
-            className="px-4 py-2 rounded-xl bg-forest-700 text-cream text-sm font-semibold hover:bg-forest-900 disabled:opacity-50 cursor-pointer"
+            className="px-4 py-2 rounded-lg bg-forest-700 text-cream text-sm font-medium hover:bg-forest-900 disabled:opacity-50 cursor-pointer"
           >
-            {submitting ? 'Mengirim…' : 'Kirim Laporan'}
+            {submitting ? 'Mengirim…' : 'Kirim laporan'}
           </button>
         </div>
       </form>
@@ -281,16 +281,16 @@ export function PhotoLightbox({
       aria-labelledby={titleId}
       onClose={handleClose}
       {...({ closedby: 'any' } as Record<string, string>)}
-      className="rounded-2xl border border-stone-200 bg-white text-stone-900 p-0 max-w-2xl w-[calc(100%-2rem)] shadow-2xl m-auto"
+      className="rounded-lg border border-warm-border bg-white text-ink p-0 max-w-2xl w-[calc(100%-2rem)] shadow-2xl m-auto"
     >
       <div className="p-4 sm:p-5">
         <div className="flex items-center justify-between gap-3 mb-3">
           <div>
-            <h2 id={titleId} className="font-serif text-lg font-bold text-stone-900">
+            <h2 id={titleId} className="font-serif text-lg font-semibold text-ink">
               {title}
             </h2>
             {images.length > 0 && (
-              <p className="text-xs text-stone-500">
+              <p className="text-xs text-stone-600 tabular-nums">
                 Foto {safeIdx + 1} dari {images.length}
               </p>
             )}
@@ -300,13 +300,13 @@ export function PhotoLightbox({
             autoFocus
             onClick={() => ref.current?.close('')}
             aria-label="Tutup galeri foto"
-            className="px-3 py-1.5 rounded-lg border border-stone-300 text-xs font-semibold text-stone-700 hover:bg-stone-100 cursor-pointer"
+            className="px-3 py-1.5 rounded-lg border border-input-border text-xs font-medium text-ink hover:bg-paper cursor-pointer"
           >
             Tutup (Esc)
           </button>
         </div>
 
-        <div className="rounded-xl overflow-hidden border border-stone-200 bg-stone-50 flex items-center justify-center max-h-[65dvh]">
+        <div className="rounded-lg overflow-hidden border border-warm-border bg-paper flex items-center justify-center max-h-[65dvh]">
           {images[safeIdx] && (
             <img
               src={images[safeIdx]}
@@ -321,16 +321,16 @@ export function PhotoLightbox({
             <button
               type="button"
               onClick={() => setIndex((i) => i - 1)}
-              className="px-3.5 py-2 rounded-lg border border-stone-300 text-xs font-semibold text-stone-700 hover:bg-stone-100 cursor-pointer"
+              className="px-3.5 py-2 rounded-lg border border-input-border text-xs font-medium text-ink hover:bg-paper cursor-pointer"
             >
-              ← Sebelumnya
+              Sebelumnya
             </button>
             <button
               type="button"
               onClick={() => setIndex((i) => i + 1)}
-              className="px-3.5 py-2 rounded-lg border border-stone-300 text-xs font-semibold text-stone-700 hover:bg-stone-100 cursor-pointer"
+              className="px-3.5 py-2 rounded-lg border border-input-border text-xs font-medium text-ink hover:bg-paper cursor-pointer"
             >
-              Berikutnya →
+              Berikutnya
             </button>
           </div>
         )}

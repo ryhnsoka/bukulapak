@@ -66,28 +66,35 @@ export default function OrderBox({
     }) di BukuLapak. Apakah masih tersedia?`;
 
     return (
-      <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-5">
-        <p className="font-bold text-forest-900 mb-1">✅ Pesanan {order.code} dibuat!</p>
-        <p className="text-sm text-stone-700 mb-4">
-          Status: {order.status_label ?? order.status}. Lanjutkan koordinasi pembayaran/COD
-          lewat Chat BukuLapak{wa ? ' atau WhatsApp penjual' : ''}.
+      <div className="bg-forest-50 border border-forest-100 rounded-lg p-5">
+        <p className="inline-flex items-center gap-2 font-semibold text-forest-900 mb-1.5">
+          <svg className="w-4 h-4 text-forest-700 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+          </svg>
+          <span>
+            Pesanan <span className="font-mono text-sm">{order.code}</span> tercatat
+          </span>
+        </p>
+        <p className="text-sm text-stone-700 mb-4 leading-relaxed">
+          Status: {order.status_label ?? order.status}. Lanjutkan kesepakatan pembayaran atau COD
+          lewat chat BukuLapak{wa ? ' atau WhatsApp penjual' : ''}.
         </p>
         {wa && (
           <a
             href={`https://wa.me/${wa}?text=${encodeURIComponent(msg)}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 bg-emerald-600 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-emerald-700 transition shadow-sm mb-3"
+            className="flex items-center justify-center gap-2 bg-emerald-700 text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-emerald-800 transition-colors mb-3"
           >
-            Chat Penjual via WhatsApp
+            Chat penjual lewat WhatsApp
           </a>
         )}
-        <div className="flex flex-wrap gap-3 text-xs font-semibold">
-          <Link href="/chat" className="text-forest-700 underline">
-            Buka Chat BukuLapak
+        <div className="flex flex-wrap gap-4 text-xs font-medium">
+          <Link href="/chat" className="text-forest-700 underline underline-offset-4">
+            Buka chat
           </Link>
-          <Link href="/profil" className="text-stone-700 underline">
-            Lihat di Pesanan Saya
+          <Link href="/profil" className="text-stone-700 underline underline-offset-4">
+            Lihat pesanan
           </Link>
         </div>
       </div>
@@ -97,12 +104,12 @@ export default function OrderBox({
   return (
     <form
       onSubmit={submit}
-      className="bg-white border border-warm-border rounded-xl p-5 flex flex-col gap-3"
+      className="bg-white border border-warm-border rounded-lg p-5 flex flex-col gap-3"
     >
       <div>
-        <h2 className="font-bold text-stone-900">Beli Langsung</h2>
-        <p className="text-xs text-stone-600 mt-0.5">
-          Pesanan tercatat dan buku otomatis di-reserve agar tidak dipesan orang lain.
+        <h2 className="font-sans font-semibold text-base text-ink">Beli langsung</h2>
+        <p className="text-xs text-stone-600 mt-0.5 leading-relaxed">
+          Pesanan dicatat dan buku langsung ditahan sementara agar tidak dipesan pembeli lain.
         </p>
       </div>
 
@@ -117,7 +124,7 @@ export default function OrderBox({
           required
           autoComplete="name"
           placeholder="Nama lengkap"
-          className="w-full border border-stone-300 rounded-xl p-3 text-sm bg-white"
+          className="w-full border border-input-border rounded-lg p-3 text-sm bg-white"
         />
       </div>
 
@@ -130,8 +137,8 @@ export default function OrderBox({
           value={note}
           onChange={(e) => setNote(e.target.value)}
           rows={2}
-          placeholder="Jadwal COD, area pertemuan, atau ekspedisi…"
-          className="w-full border border-stone-300 rounded-xl p-3 text-sm bg-white"
+          placeholder="Jadwal COD, area pertemuan, atau pilihan kurir…"
+          className="w-full border border-input-border rounded-lg p-3 text-sm bg-white"
         />
       </div>
 
@@ -140,11 +147,11 @@ export default function OrderBox({
       <button
         type="submit"
         disabled={loading || !name.trim()}
-        className="bg-forest-700 text-cream px-6 py-3 rounded-xl text-sm font-semibold hover:bg-forest-900 transition shadow-sm disabled:opacity-50 cursor-pointer"
+        className="bg-forest-700 text-cream px-6 py-3 rounded-lg text-sm font-medium hover:bg-forest-900 transition-colors tabular-nums disabled:opacity-50 cursor-pointer"
       >
         {loading
           ? 'Memproses…'
-          : `Pesan Sekarang • ${listing.price === 0 ? 'Gratis' : `Rp ${listing.price.toLocaleString('id-ID')}`}`}
+          : `Pesan sekarang · ${listing.price === 0 ? 'Gratis' : `Rp\u00A0${listing.price.toLocaleString('id-ID')}`}`}
       </button>
     </form>
   );

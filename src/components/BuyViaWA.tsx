@@ -15,9 +15,9 @@ export default function BuyViaWA({ listing, compact = false }: { listing: Listin
   if (!listing.wa_number) {
     if (compact) return null;
     return (
-      <p className="text-sm text-stone-600 bg-stone-100 rounded-xl p-4">
-        Penjual belum mencantumkan nomor WA. Gunakan{' '}
-        <Link href="/chat" className="underline font-semibold text-forest-700">
+      <p className="text-sm text-stone-600 bg-paper rounded-lg p-4">
+        Penjual tidak mencantumkan nomor WA. Gunakan{' '}
+        <Link href="/chat" className="underline font-medium text-forest-700">
           chat BukuLapak
         </Link>{' '}
         untuk menghubunginya.
@@ -30,9 +30,9 @@ export default function BuyViaWA({ listing, compact = false }: { listing: Listin
     return (
       <Link
         href={`/login?next=${encodeURIComponent(`/listings/${listing.id}`)}`}
-        className="block text-center bg-forest-700 text-cream px-6 py-3 rounded-xl font-semibold hover:bg-forest-900 transition shadow-sm"
+        className="block text-center bg-forest-700 text-cream px-6 py-3 rounded-lg font-medium hover:bg-forest-900 transition-colors"
       >
-        Login untuk Membeli
+        Masuk untuk membeli
       </Link>
     );
   }
@@ -48,7 +48,7 @@ export default function BuyViaWA({ listing, compact = false }: { listing: Listin
         target="_blank"
         rel="noopener noreferrer"
         onClick={() => trackContactSeller('whatsapp', listing.id)}
-        className="inline-flex items-center justify-center gap-1 border border-emerald-600 text-emerald-800 bg-white text-xs font-semibold px-3.5 py-2 rounded-xl hover:bg-emerald-50 transition"
+        className="inline-flex items-center justify-center gap-1 border border-emerald-700 text-emerald-800 bg-white text-xs font-medium px-3.5 py-2 rounded-lg hover:bg-emerald-50 transition-colors"
       >
         WA
       </a>
@@ -62,9 +62,9 @@ export default function BuyViaWA({ listing, compact = false }: { listing: Listin
         target="_blank"
         rel="noopener noreferrer"
         onClick={() => trackContactSeller('whatsapp', listing.id)}
-        className="flex items-center justify-center gap-2 bg-emerald-600 text-white px-5 py-3 rounded-xl text-sm font-semibold hover:bg-emerald-700 transition shadow-sm"
+        className="flex items-center justify-center gap-2 bg-emerald-700 text-white px-5 py-3 rounded-lg text-sm font-medium hover:bg-emerald-800 transition-colors"
       >
-        Beli via WhatsApp
+        Beli lewat WhatsApp
       </a>
     </div>
   );

@@ -26,9 +26,9 @@ export default function ChatButton({
     return (
       <Link
         href={`/login?next=${encodeURIComponent(`/listings/${listingId}`)}`}
-        className="block text-center bg-forest-700 text-cream px-5 py-3 rounded-xl text-sm font-semibold hover:bg-forest-900 transition"
+        className="block text-center bg-forest-700 text-cream px-5 py-3 rounded-lg text-sm font-medium hover:bg-forest-900 transition-colors"
       >
-        Login untuk Chat Penjual
+        Masuk untuk chat penjual
       </Link>
     );
   }
@@ -36,8 +36,8 @@ export default function ChatButton({
   if (user.id === sellerId) {
     if (compact) return null;
     return (
-      <p className="text-sm text-stone-600 bg-stone-100 border border-stone-200 rounded-xl p-4">
-        Ini listing milikmu.
+      <p className="text-sm text-stone-600 bg-paper border border-warm-border rounded-lg p-4">
+        Ini buku yang sedang kamu jual.
       </p>
     );
   }
@@ -50,7 +50,7 @@ export default function ChatButton({
       trackContactSeller('in_app_chat', listingId);
       router.push(`/chat/${res.data.conversation.id}`);
     } catch (err: unknown) {
-      showToast(err instanceof Error ? err.message : 'Gagal memulai chat.', 'error');
+      showToast(err instanceof Error ? err.message : 'Gagal membuka obrolan.', 'error');
     } finally {
       setLoading(false);
     }
@@ -63,11 +63,19 @@ export default function ChatButton({
       disabled={loading}
       className={
         compact
-          ? 'border border-forest-700 text-forest-900 bg-white text-xs font-semibold px-3.5 py-2 rounded-xl hover:bg-forest-50 transition disabled:opacity-50 cursor-pointer'
-          : 'w-full border border-forest-700 text-forest-900 bg-white px-5 py-3 rounded-xl text-sm font-semibold hover:bg-forest-50 transition disabled:opacity-50 cursor-pointer'
+          ? 'inline-flex items-center justify-center gap-1.5 border border-forest-700 text-forest-900 bg-white text-xs font-medium px-3.5 py-2 rounded-lg hover:bg-forest-50 transition-colors disabled:opacity-50 cursor-pointer'
+          : 'w-full inline-flex items-center justify-center gap-2 border border-forest-700 text-forest-900 bg-white px-5 py-3 rounded-lg text-sm font-medium hover:bg-forest-50 transition-colors disabled:opacity-50 cursor-pointer'
       }
     >
-      {loading ? 'Membuka chat…' : compact ? '💬 Chat' : '💬 Chat Penjual'}
+      <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="1.75"
+          d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
+        />
+      </svg>
+      <span>{loading ? 'Membuka obrolan…' : compact ? 'Chat' : 'Chat penjual'}</span>
     </button>
   );
 }

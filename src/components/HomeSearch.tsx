@@ -20,7 +20,7 @@ export default function HomeSearch() {
   }
 
   return (
-    <div className="max-w-xl mx-auto mt-6">
+    <div className="w-full">
       <form onSubmit={submit} className="flex gap-2">
         <label htmlFor={inputId} className="sr-only">
           Cari judul buku, penulis, atau ISBN
@@ -30,19 +30,19 @@ export default function HomeSearch() {
           type="search"
           value={q}
           onChange={(e) => setQ(e.target.value)}
-          placeholder="Ketik judul, penulis, atau ISBN… (cth: Laut Bercerita)"
-          className="flex-1 bg-white border border-stone-300 rounded-xl px-4 py-3 text-sm sm:text-base shadow-sm"
+          placeholder="Cari judul, penulis, atau ISBN…"
+          className="flex-1 min-w-0 bg-white border border-input-border rounded-lg px-3.5 py-2.5 text-sm text-ink placeholder:text-stone-500"
         />
         <button
           type="submit"
-          className="bg-forest-700 text-cream px-5 sm:px-6 py-3 rounded-xl text-sm font-semibold hover:bg-forest-900 transition shadow-sm cursor-pointer"
+          className="bg-forest-700 text-cream px-4 sm:px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-forest-900 transition-colors cursor-pointer shrink-0"
         >
-          Cari Buku
+          Cari
         </button>
       </form>
 
-      <div className="flex flex-wrap justify-center items-center gap-2 mt-3 text-xs">
-        <span className="text-stone-500">Populer:</span>
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2.5 text-xs text-stone-600">
+        <span>Sering dicari:</span>
         {QUICK_SUGGESTIONS.map((term) => (
           <button
             key={term}
@@ -51,7 +51,7 @@ export default function HomeSearch() {
               trackSearch(term, 'home');
               router.push(`/books?q=${encodeURIComponent(term)}`);
             }}
-            className="px-3 py-1 rounded-full bg-white border border-stone-300 text-stone-700 hover:border-forest-700 hover:text-forest-900 transition cursor-pointer"
+            className="hover:text-forest-800 underline decoration-warm-border hover:decoration-forest-700 underline-offset-4 transition-colors cursor-pointer"
           >
             {term}
           </button>

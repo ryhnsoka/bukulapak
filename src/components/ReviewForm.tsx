@@ -30,15 +30,15 @@ export default function ReviewForm({
 
   if (!user) {
     return (
-      <div className="bg-white border border-warm-border rounded-xl p-4 flex flex-wrap items-center justify-between gap-3">
+      <div className="bg-white border border-warm-border rounded-lg p-4 flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm text-stone-600">
-          Masuk untuk menulis review dan menyukai ulasan pembaca lain.
+          Masuk untuk menulis ulasan atau menyukai catatan pembaca lain.
         </p>
         <Link
           href={`/login?next=${encodeURIComponent(`/books/${bookId}#review`)}`}
-          className="bg-forest-700 text-cream text-xs font-semibold px-4 py-2 rounded-xl hover:bg-forest-900 transition"
+          className="bg-forest-700 text-cream text-xs font-medium px-4 py-2 rounded-lg hover:bg-forest-900 transition-colors"
         >
-          Login untuk Review
+          Masuk untuk mengulas
         </Link>
       </div>
     );
@@ -58,10 +58,10 @@ export default function ReviewForm({
       setTitle('');
       setContent('');
       setIsSpoiler(false);
-      showToast('Review berhasil disimpan.', 'success');
+      showToast('Ulasan tersimpan.', 'success');
       onSubmitted?.(res.data.review);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Gagal menyimpan review');
+      setError(err instanceof Error ? err.message : 'Gagal menyimpan ulasan');
     } finally {
       setSending(false);
     }
@@ -70,12 +70,12 @@ export default function ReviewForm({
   return (
     <form
       onSubmit={submit}
-      className="bg-white border border-warm-border rounded-xl p-5 flex flex-col gap-3"
+      className="bg-white border border-warm-border rounded-lg p-5 flex flex-col gap-3"
     >
-      <h3 className="font-bold text-stone-900">Tulis Review</h3>
+      <h3 className="font-sans font-semibold text-base text-ink">Tulis ulasan</h3>
 
       <div>
-        <span className="block text-xs font-semibold text-stone-700 mb-1">Rating Buku</span>
+        <span className="block text-xs font-semibold text-stone-700 mb-1">Nilai buku</span>
         <div className="flex items-center gap-1" onMouseLeave={() => setHover(0)}>
           {[1, 2, 3, 4, 5].map((i) => (
             <button
@@ -85,41 +85,43 @@ export default function ReviewForm({
               onMouseEnter={() => setHover(i)}
               aria-label={`${i} bintang`}
               className={`text-2xl leading-none px-0.5 transition cursor-pointer ${
-                i <= (hover || rating) ? 'text-amber-500 scale-105' : 'text-stone-300'
+                i <= (hover || rating) ? 'text-ochre' : 'text-stone-300'
               }`}
             >
               ★
             </button>
           ))}
-          <span className="text-xs font-medium text-stone-600 ml-2">{hover || rating}/5</span>
+          <span className="text-xs font-medium text-stone-600 ml-2 tabular-nums">
+            {hover || rating}/5
+          </span>
         </div>
       </div>
 
       <div>
         <label htmlFor={titleId} className="block text-xs font-semibold text-stone-700 mb-1">
-          Judul review (opsional)
+          Judul ulasan (opsional)
         </label>
         <input
           id={titleId}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          placeholder="Ringkas kesan utamamu…"
-          className="w-full border border-stone-300 rounded-xl p-3 text-sm bg-white"
+          placeholder="Satu kalimat singkat soal buku ini…"
+          className="w-full border border-input-border rounded-lg p-3 text-sm bg-white"
         />
       </div>
 
       <div>
         <label htmlFor={contentId} className="block text-xs font-semibold text-stone-700 mb-1">
-          Isi review
+          Isi ulasan
         </label>
         <textarea
           id={contentId}
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          placeholder="Ceritakan pendapatmu tentang isi buku ini (bukan penilaian penjual)…"
+          placeholder="Tulis pendapatmu soal isi buku ini, bukan soal pengiriman atau penjual…"
           rows={4}
           required
-          className="w-full border border-stone-300 rounded-xl p-3 text-sm bg-white"
+          className="w-full border border-input-border rounded-lg p-3 text-sm bg-white"
         />
       </div>
 
@@ -130,7 +132,7 @@ export default function ReviewForm({
           checked={isSpoiler}
           onChange={(e) => setIsSpoiler(e.target.checked)}
         />
-        <span>Review ini mengandung spoiler cerita</span>
+        <span>Mengandung bocoran cerita (spoiler)</span>
       </label>
 
       {error && <p className="text-xs text-red-700">{error}</p>}
@@ -138,9 +140,9 @@ export default function ReviewForm({
       <button
         type="submit"
         disabled={sending || content.trim() === ''}
-        className="bg-forest-700 text-cream rounded-xl py-2.5 px-5 text-sm font-semibold hover:bg-forest-900 transition disabled:opacity-50 self-start cursor-pointer"
+        className="bg-forest-700 text-cream rounded-lg py-2.5 px-5 text-sm font-medium hover:bg-forest-900 transition-colors disabled:opacity-50 self-start cursor-pointer"
       >
-        {sending ? 'Mengirim…' : 'Kirim Review'}
+        {sending ? 'Mengirim…' : 'Kirim ulasan'}
       </button>
     </form>
   );

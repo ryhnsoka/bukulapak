@@ -36,12 +36,12 @@ export default function RegisterPage() {
 
   return (
     <div className="max-w-md mx-auto px-4 py-14">
-      <div className="bg-white border border-warm-border rounded-2xl p-8 shadow-sm">
-        <h1 className="text-2xl font-bold font-serif mb-6 text-center text-forest-900">Daftar</h1>
+      <div className="bg-white border border-warm-border rounded-lg p-7 sm:p-8">
+        <h1 className="type-page-title text-ink mb-6 text-center">Daftar</h1>
         <form onSubmit={submit} className="flex flex-col gap-4">
           <div>
             <label htmlFor={nameId} className="block text-xs font-semibold text-stone-700 mb-1">
-              Nama Lengkap
+              Nama lengkap
             </label>
             <input
               id={nameId}
@@ -50,7 +50,7 @@ export default function RegisterPage() {
               placeholder="Nama lengkapmu"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full border border-stone-300 rounded-xl p-3 text-sm bg-white"
+              className="w-full border border-input-border rounded-lg p-3 text-sm bg-white"
             />
           </div>
 
@@ -66,7 +66,7 @@ export default function RegisterPage() {
               placeholder="nama@email.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full border border-stone-300 rounded-xl p-3 text-sm bg-white"
+              className="w-full border border-input-border rounded-lg p-3 text-sm bg-white"
             />
           </div>
 
@@ -83,7 +83,7 @@ export default function RegisterPage() {
               placeholder="Minimal 6 karakter"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full border border-stone-300 rounded-xl p-3 text-sm bg-white"
+              className="w-full border border-input-border rounded-lg p-3 text-sm bg-white"
             />
           </div>
 
@@ -92,7 +92,7 @@ export default function RegisterPage() {
           <button
             type="submit"
             disabled={loading}
-            className="bg-forest-700 text-cream rounded-xl p-3 text-sm font-semibold hover:bg-forest-900 transition disabled:opacity-50 cursor-pointer"
+            className="bg-forest-700 text-cream rounded-lg p-3 text-sm font-medium hover:bg-forest-900 transition-colors disabled:opacity-50 cursor-pointer"
           >
             {loading ? 'Memproses…' : 'Daftar'}
           </button>
@@ -100,8 +100,8 @@ export default function RegisterPage() {
 
         <p className="text-sm text-stone-600 text-center mt-4">
           Sudah punya akun?{' '}
-          <Link href="/login" className="underline font-semibold text-forest-700">
-            Login
+          <Link href="/login" className="underline font-medium text-forest-700">
+            Masuk
           </Link>
         </p>
       </div>

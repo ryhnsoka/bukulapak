@@ -1,32 +1,88 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-cream: #fef9e7;
-  --color-paper: #f4efe0;
-  --color-warm-border: #e7e0cc;
-  --color-forest-50: #f0fdf4;
-  --color-forest-100: #dcfce7;
-  --color-forest-500: #16a34a;
-  --color-forest-700: #15803d;
-  --color-forest-800: #166534;
-  --color-forest-900: #14532d;
-  --font-serif: var(--font-merriweather), Georgia, "Times New Roman", serif;
-  --font-sans: var(--font-inter), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --color-cream: #faf7f0;
+  --color-paper: #f2ede2;
+  --color-warm-border: #dfd7c8;
+  --color-input-border: #8c857b;
+  --color-ink: #1c1a17;
+  --color-ochre: #b46914;
+  --color-forest-50: #f3f7f4;
+  --color-forest-100: #e7efe9;
+  --color-forest-500: #2f684e;
+  --color-forest-700: #234c39;
+  --color-forest-800: #1c3d2e;
+  --color-forest-900: #163024;
+  --font-serif: var(--font-newsreader), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-jakarta), system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 body {
-  background-color: #fef9e7;
-  color: #1c1917;
+  background-color: #faf7f0;
+  color: #1c1a17;
   font-family: var(--font-sans);
+  line-height: 1.5;
+  accent-color: #234c39;
+  font-kerning: normal;
 }
 
-h1, h2, h3 {
+.type-display {
   font-family: var(--font-serif);
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-size: clamp(2rem, 1.5rem + 2vw, 3.25rem);
+  line-height: 1.08;
+  letter-spacing: -0.028em;
   text-wrap: balance;
 }
 
+.type-page-title {
+  font-family: var(--font-serif);
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-size: clamp(1.625rem, 1.35rem + 1vw, 2.125rem);
+  line-height: 1.15;
+  letter-spacing: -0.022em;
+  text-wrap: balance;
+}
+
+.type-book-title {
+  font-family: var(--font-serif);
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-size: clamp(1.75rem, 1.45rem + 1.2vw, 2.5rem);
+  line-height: 1.12;
+  letter-spacing: -0.024em;
+  text-wrap: balance;
+}
+
+.type-section {
+  font-family: var(--font-serif);
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
+  line-height: 1.22;
+  letter-spacing: -0.018em;
+}
+
+.type-card-title {
+  font-family: var(--font-serif);
+  font-optical-sizing: auto;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.type-prose {
+  max-width: 65ch;
+  line-height: 1.65;
+  text-wrap: pretty;
+  overflow-wrap: break-word;
+}
+
 :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
-  outline: 2px solid #15803d;
+  outline: 2px solid #234c39;
   outline-offset: 2px;
 }
 
@@ -35,8 +91,8 @@ h1, h2, h3 {
   left: 0.75rem;
   top: -4rem;
   z-index: 60;
-  background-color: #14532d;
-  color: #ffffff;
+  background-color: #163024;
+  color: #faf7f0;
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
   font-size: 0.875rem;
@@ -46,6 +102,78 @@ h1, h2, h3 {
 
 .skip-link:focus-visible {
   top: 0.75rem;
+}
+
+@supports not (accent-color: #234c39) {
+  label {
+    position: relative;
+  }
+
+  form input[type="checkbox"] {
+    position: absolute !important;
+    clip-path: inset(50%) !important;
+    overflow: hidden !important;
+    width: 1px !important;
+    height: 1px !important;
+    margin: -1px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    white-space: nowrap !important;
+  }
+
+  form input[type="checkbox"] + span {
+    position: relative;
+    display: inline-block;
+    padding-left: 1.625rem;
+  }
+
+  form input[type="checkbox"] + span::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.125rem;
+    width: 1.125rem;
+    height: 1.125rem;
+    border: 2px solid #8c857b;
+    background: #ffffff;
+    border-radius: 0.25rem;
+    box-sizing: border-box;
+  }
+
+  form input[type="checkbox"]:focus-visible + span::before {
+    outline: 2px solid #234c39;
+    outline-offset: 2px;
+  }
+
+  form input[type="checkbox"]:checked + span::before {
+    background-color: #234c39;
+    border-color: #234c39;
+  }
+
+  form input[type="checkbox"]:checked + span::after {
+    content: "✓";
+    position: absolute;
+    left: 0.18rem;
+    top: 0.05rem;
+    color: #faf7f0;
+    font-weight: 700;
+    font-size: 0.8rem;
+    line-height: 1;
+  }
+}
+
+@media (forced-colors: active) {
+  input,
+  select,
+  textarea,
+  button,
+  article {
+    border-color: ButtonBorder;
+  }
+
+  :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+    outline: 2px solid Highlight;
+  }
 }
 
 [popover]:not(:is(:popover-open, .\:popover-open)) {
@@ -63,13 +191,13 @@ dialog:modal {
 dialog::backdrop {
   overflow: hidden;
   overscroll-behavior: contain;
-  background-color: rgba(28, 25, 23, 0.62);
+  background-color: rgba(28, 26, 23, 0.62);
   backdrop-filter: blur(2px);
 }
 
 .shelf-scroll {
   scrollbar-width: thin;
-  scrollbar-color: #d6d3d1 transparent;
+  scrollbar-color: #c8bfb0 transparent;
 }
 
 @media (prefers-reduced-motion: reduce) {

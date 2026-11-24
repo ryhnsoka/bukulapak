@@ -7,10 +7,10 @@ import { useAuth } from '@/lib/auth';
 
 const NAV_ITEMS = [
   { href: '/', label: 'Beranda' },
-  { href: '/books', label: 'Jelajahi Buku' },
+  { href: '/books', label: 'Katalog' },
   { href: '/marketplace', label: 'Marketplace' },
   { href: '/komunitas', label: 'Komunitas' },
-  { href: '/jual', label: 'Jual Buku' },
+  { href: '/jual', label: 'Jual buku' },
 ];
 
 function isRouteActive(pathname: string, href: string) {
@@ -20,7 +20,7 @@ function isRouteActive(pathname: string, href: string) {
 function DesktopNavLinks() {
   const pathname = usePathname();
   return (
-    <div className="hidden md:flex items-center gap-1 lg:gap-2 text-sm">
+    <div className="hidden md:flex items-center gap-5 lg:gap-6 text-sm">
       {NAV_ITEMS.map((item) => {
         const active = isRouteActive(pathname, item.href);
         return (
@@ -28,10 +28,10 @@ function DesktopNavLinks() {
             key={item.href}
             href={item.href}
             aria-current={active ? 'page' : undefined}
-            className={`whitespace-nowrap px-2.5 lg:px-3 py-1.5 rounded-lg transition ${
+            className={`whitespace-nowrap py-1 border-b-2 transition-colors ${
               active
-                ? 'bg-forest-900 text-white font-bold shadow-[inset_0_-2px_0_#fef9e7]'
-                : 'text-cream/90 hover:text-white hover:bg-forest-900/50'
+                ? 'text-forest-900 font-semibold border-forest-700'
+                : 'text-stone-700 hover:text-ink border-transparent'
             }`}
           >
             {item.label}
@@ -45,7 +45,7 @@ function DesktopNavLinks() {
 function MobileNavLinks({ onNavigate }: { onNavigate: () => void }) {
   const pathname = usePathname();
   return (
-    <div className="flex flex-col gap-1.5">
+    <div className="flex flex-col gap-1">
       {NAV_ITEMS.map((item) => {
         const active = isRouteActive(pathname, item.href);
         return (
@@ -54,10 +54,10 @@ function MobileNavLinks({ onNavigate }: { onNavigate: () => void }) {
             href={item.href}
             aria-current={active ? 'page' : undefined}
             onClick={onNavigate}
-            className={`px-3 py-2 rounded-lg transition ${
+            className={`px-3 py-2 rounded-md transition-colors ${
               active
-                ? 'bg-forest-900 text-white font-bold border-l-4 border-cream'
-                : 'text-cream/90 hover:bg-forest-900'
+                ? 'bg-forest-50 text-forest-900 font-semibold border-l-2 border-forest-700'
+                : 'text-stone-700 hover:bg-paper hover:text-ink'
             }`}
           >
             {item.label}
@@ -139,15 +139,12 @@ export default function Navbar() {
   }
 
   return (
-    <header className="sticky top-0 z-20 bg-forest-700 text-cream shadow-md">
+    <header className="sticky top-0 z-20 bg-cream/95 backdrop-blur-xs border-b border-warm-border text-ink">
       <nav aria-label="Utama">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
-          <Link
-            href="/"
-            className="flex items-center gap-2 text-2xl font-bold font-serif tracking-wide shrink-0"
-          >
+          <Link href="/" className="flex items-center gap-2 shrink-0">
             <svg
-              className="w-7 h-7"
+              className="w-6 h-6 text-forest-700"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -156,14 +153,16 @@ export default function Navbar() {
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                strokeWidth="2"
+                strokeWidth="1.75"
                 d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
               />
             </svg>
-            <span>BukuLapak</span>
+            <span className="font-serif text-[1.375rem] font-semibold tracking-[-0.02em] text-forest-900">
+              BukuLapak
+            </span>
           </Link>
 
-          <Suspense fallback={<div className="hidden md:flex items-center gap-4 text-sm" />}>
+          <Suspense fallback={<div className="hidden md:flex items-center gap-5 text-sm" />}>
             <DesktopNavLinks />
           </Suspense>
 
@@ -177,54 +176,57 @@ export default function Navbar() {
                   aria-controls={popoverId}
                   onClick={toggleMenuFallback}
                   popoverTarget={popoverId}
-                  className="flex items-center gap-2 bg-cream text-forest-700 rounded-full pl-1 pr-3 py-1 hover:bg-white transition shadow-sm cursor-pointer"
+                  className="flex items-center gap-2 bg-white border border-warm-border text-ink rounded-md pl-1.5 pr-3 py-1 hover:border-stone-400 transition-colors cursor-pointer"
                 >
                   <span
-                    className="w-7 h-7 rounded-full bg-forest-700 text-cream flex items-center justify-center text-xs font-bold"
+                    className="w-6 h-6 rounded-sm bg-forest-700 text-cream flex items-center justify-center text-xs font-semibold"
                     aria-hidden="true"
                   >
                     {user.name.charAt(0).toUpperCase()}
                   </span>
-                  <span className="font-semibold">{user.name.split(' ')[0]}</span>
+                  <span className="font-medium">{user.name.split(' ')[0]}</span>
                 </button>
 
                 <div
                   ref={popoverRef}
                   id={popoverId}
                   popover="auto"
-                  className="w-52 bg-white text-stone-800 border border-stone-200 rounded-xl shadow-xl p-2 m-0"
+                  className="w-48 bg-white text-ink border border-warm-border rounded-lg shadow-lg p-1.5 m-0"
                 >
                   <Link
                     href="/profil"
                     onClick={closeUserMenu}
-                    className="block px-3 py-2 rounded-lg hover:bg-stone-100 text-sm font-medium"
+                    className="block px-3 py-2 rounded-md hover:bg-paper text-sm font-medium"
                   >
-                    Profil Saya
+                    Profil
                   </Link>
                   <Link
                     href="/chat"
                     onClick={closeUserMenu}
-                    className="block px-3 py-2 rounded-lg hover:bg-stone-100 text-sm font-medium"
+                    className="block px-3 py-2 rounded-md hover:bg-paper text-sm font-medium"
                   >
-                    Chat Transaksi
+                    Chat
                   </Link>
                   <button
                     type="button"
                     onClick={handleLogout}
-                    className="w-full text-left px-3 py-2 rounded-lg text-red-700 hover:bg-red-50 text-sm font-medium cursor-pointer"
+                    className="w-full text-left px-3 py-2 rounded-md text-red-700 hover:bg-red-50 text-sm font-medium cursor-pointer"
                   >
-                    Logout
+                    Keluar
                   </button>
                 </div>
               </div>
             ) : ready ? (
-              <div className="hidden sm:flex items-center gap-3 shrink-0">
-                <Link href="/login" className="whitespace-nowrap hover:text-white text-cream/95 transition">
-                  Login
+              <div className="hidden sm:flex items-center gap-3.5 shrink-0">
+                <Link
+                  href="/login"
+                  className="whitespace-nowrap text-stone-700 hover:text-ink font-medium transition-colors"
+                >
+                  Masuk
                 </Link>
                 <Link
                   href="/register"
-                  className="whitespace-nowrap bg-cream text-forest-700 px-3.5 lg:px-4 py-1.5 rounded-lg font-semibold hover:bg-white transition shadow-sm"
+                  className="whitespace-nowrap bg-forest-700 text-cream px-3.5 py-1.5 rounded-md font-medium hover:bg-forest-900 transition-colors"
                 >
                   Daftar
                 </Link>
@@ -237,13 +239,13 @@ export default function Navbar() {
               aria-expanded={mobileOpen}
               aria-controls={mobileDrawerId}
               onClick={() => setMobileOpen((v) => !v)}
-              className="md:hidden p-2 rounded-lg hover:bg-forest-900 transition cursor-pointer"
+              className="md:hidden p-2 rounded-md text-stone-700 hover:bg-paper hover:text-ink transition-colors cursor-pointer"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  strokeWidth="2"
+                  strokeWidth="1.75"
                   d={mobileOpen ? 'M6 18L18 6M6 6l12 12' : 'M4 6h16M4 12h16M4 18h16'}
                 />
               </svg>
@@ -254,49 +256,49 @@ export default function Navbar() {
         {mobileOpen && (
           <div
             id={mobileDrawerId}
-            className="md:hidden border-t border-forest-900 bg-forest-800 px-4 py-3 flex flex-col gap-2 text-sm"
+            className="md:hidden border-t border-warm-border bg-cream px-4 py-3 flex flex-col gap-2 text-sm text-ink"
           >
             <Suspense fallback={null}>
               <MobileNavLinks onNavigate={() => setMobileOpen(false)} />
             </Suspense>
 
             {ready && user ? (
-              <div className="flex flex-col gap-1.5 pt-2 border-t border-forest-900">
+              <div className="flex flex-col gap-1 pt-2 border-t border-warm-border">
                 <Link
                   href="/profil"
                   onClick={() => setMobileOpen(false)}
-                  className="px-3 py-2 rounded-lg hover:bg-forest-900"
+                  className="px-3 py-2 rounded-md text-stone-700 hover:bg-paper hover:text-ink"
                 >
-                  Profil Saya ({user.name.split(' ')[0]})
+                  Profil ({user.name.split(' ')[0]})
                 </Link>
                 <Link
                   href="/chat"
                   onClick={() => setMobileOpen(false)}
-                  className="px-3 py-2 rounded-lg hover:bg-forest-900"
+                  className="px-3 py-2 rounded-md text-stone-700 hover:bg-paper hover:text-ink"
                 >
-                  Chat Transaksi
+                  Chat
                 </Link>
                 <button
                   type="button"
                   onClick={handleLogout}
-                  className="text-left px-3 py-2 rounded-lg text-red-200 hover:bg-red-900/40 cursor-pointer"
+                  className="text-left px-3 py-2 rounded-md text-red-700 hover:bg-red-50 cursor-pointer"
                 >
-                  Logout
+                  Keluar
                 </button>
               </div>
             ) : ready ? (
-              <div className="flex gap-2 pt-2 border-t border-forest-900">
+              <div className="flex gap-2 pt-2 border-t border-warm-border">
                 <Link
                   href="/login"
                   onClick={() => setMobileOpen(false)}
-                  className="flex-1 text-center py-2 rounded-lg border border-cream/30"
+                  className="flex-1 text-center py-2 rounded-md border border-input-border text-ink font-medium"
                 >
-                  Login
+                  Masuk
                 </Link>
                 <Link
                   href="/register"
                   onClick={() => setMobileOpen(false)}
-                  className="flex-1 text-center py-2 rounded-lg bg-cream text-forest-700 font-semibold"
+                  className="flex-1 text-center py-2 rounded-md bg-forest-700 text-cream font-medium"
                 >
                   Daftar
                 </Link>

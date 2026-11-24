@@ -63,9 +63,9 @@ export default function ShelfButton({ bookId }: { bookId: string }) {
     return (
       <Link
         href={`/login?next=${encodeURIComponent(`/books/${bookId}`)}`}
-        className="inline-flex items-center gap-1.5 border border-stone-300 bg-white text-stone-800 px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-stone-50 transition"
+        className="inline-flex items-center gap-1.5 border border-input-border bg-white text-ink px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-paper transition-colors"
       >
-        + Simpan ke Rak Baca
+        Simpan ke rak
       </Link>
     );
   }
@@ -80,9 +80,9 @@ export default function ShelfButton({ bookId }: { bookId: string }) {
         value={effectiveShelf ?? ''}
         disabled={saving}
         onChange={(e) => handleSelect(e.target.value)}
-        className="border border-forest-700 text-forest-900 bg-white rounded-xl px-3.5 py-2.5 text-sm font-semibold disabled:opacity-50"
+        className="border border-forest-700 text-forest-900 bg-white rounded-lg px-3.5 py-2.5 text-sm font-medium disabled:opacity-50 cursor-pointer"
       >
-        <option value="">+ Tambah ke Rak Baca</option>
+        <option value="">Masukkan ke rak baca</option>
         {SHELVES.map((s) => (
           <option key={s.key} value={s.key}>
             {s.label}

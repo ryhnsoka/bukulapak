@@ -10,7 +10,7 @@ interface ErrorStateProps {
 
 export default function ErrorState({
   title = 'Gagal memuat data',
-  message = 'Terjadi gangguan koneksi ke server. Jika layanan baru aktif dari mode tidur (cold start), tunggu beberapa detik lalu coba lagi.',
+  message = 'Koneksi ke layanan sedang terganggu. Periksa jaringan lalu coba muat ulang.',
   onRetry,
 }: ErrorStateProps) {
   const router = useRouter();
@@ -26,16 +26,16 @@ export default function ErrorState({
   return (
     <div
       role="alert"
-      className="bg-red-50 border border-red-200 rounded-xl p-6 text-center my-4"
+      className="bg-red-50 border border-red-200 rounded-lg p-6 text-center my-4"
     >
-      <p className="font-semibold text-red-800 mb-1">{title}</p>
-      <p className="text-sm text-red-700 mb-4 max-w-lg mx-auto">{message}</p>
+      <p className="font-semibold text-red-900 mb-1">{title}</p>
+      <p className="text-sm text-red-800 mb-4 max-w-lg mx-auto">{message}</p>
       <button
         type="button"
         onClick={handleRetry}
-        className="bg-forest-700 text-cream text-sm font-medium px-5 py-2 rounded-lg hover:bg-forest-900 transition"
+        className="bg-forest-700 text-cream text-sm font-medium px-5 py-2 rounded-lg hover:bg-forest-900 transition-colors cursor-pointer"
       >
-        Coba Lagi
+        Muat ulang
       </button>
     </div>
   );

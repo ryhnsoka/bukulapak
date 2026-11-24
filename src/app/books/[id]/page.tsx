@@ -4,7 +4,8 @@ import BookDetailClient from '@/components/BookDetailClient';
 
 export const metadata: Metadata = {
   title: 'Detail Buku',
-  description: 'Baca review pembaca, cek daftar penjual buku bekas, dan ikuti diskusi buku di BukuLapak.',
+  description:
+    'Baca ulasan pembaca, lihat daftar penjual buku bekas, dan ikuti diskusi buku ini di BukuLapak.',
 };
 
 async function BookDetailLoader({ params }: { params: Promise<{ id: string }> }) {

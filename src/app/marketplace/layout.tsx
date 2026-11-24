@@ -3,7 +3,8 @@ import type { ReactNode } from 'react';
 
 export const metadata: Metadata = {
   title: 'Marketplace',
-  description: 'Bandingkan kondisi fisik, foto asli penjual, kota, dan harga buku bekas antarperorangan.',
+  description:
+    'Lapak buku bekas dari sesama pembaca dengan info kondisi fisik, kota penjual, dan harga.',
 };
 
 export default function MarketplaceLayout({ children }: { children: ReactNode }) {

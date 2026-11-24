@@ -75,11 +75,11 @@ export default function HomeClient() {
   return (
     <div className="py-4">
       {!configured && (
-        <div className="mb-8 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+        <div className="mb-8 rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900">
           <p className="font-semibold mb-1">Backend Firebase belum dikonfigurasi di .env.local</p>
           <p className="text-xs text-amber-800">
-            Pencarian OpenLibrary lewat Jelajahi Buku sudah siap, sedangkan katalog lokal dan
-            transaksi Firestore akan aktif setelah variabel <code>NEXT_PUBLIC_FIREBASE_*</code> diisi.
+            Pencarian OpenLibrary lewat Katalog sudah siap, sedangkan koleksi dan transaksi
+            Firestore akan aktif setelah variabel <code>NEXT_PUBLIC_FIREBASE_*</code> diisi.
           </p>
         </div>
       )}
@@ -87,11 +87,11 @@ export default function HomeClient() {
       {loading ? (
         <div className="space-y-10">
           <div>
-            <div className="h-7 w-64 bg-stone-200 rounded mb-5 animate-pulse" />
+            <div className="h-7 w-52 bg-paper rounded mb-5 animate-pulse" />
             <SkeletonCards count={4} />
           </div>
           <div>
-            <div className="h-7 w-52 bg-stone-200 rounded mb-5 animate-pulse" />
+            <div className="h-7 w-48 bg-paper rounded mb-5 animate-pulse" />
             <SkeletonCards count={4} />
           </div>
         </div>
@@ -101,21 +101,18 @@ export default function HomeClient() {
             <ErrorState title="Gagal memuat katalog buku" message={booksError} onRetry={retry} />
           ) : hangat.length === 0 ? (
             <section className="mb-12">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-1.5 h-7 bg-forest-700 rounded-full" aria-hidden="true" />
-                <h2 className="font-serif text-xl sm:text-2xl font-bold text-forest-900">
-                  Sedang Hangat Diperbincangkan
-                </h2>
+              <div className="pb-2.5 mb-5 border-b border-warm-border">
+                <h2 className="type-section text-ink">Banyak diulas</h2>
               </div>
-              <p className="text-stone-600 text-sm bg-white border border-warm-border rounded-xl p-5">
-                Belum ada buku di katalog lokal.{' '}
-                <Link href="/books" className="underline font-semibold text-forest-700">
-                  Cari buku di OpenLibrary →
+              <p className="text-stone-600 text-sm bg-white border border-warm-border rounded-lg p-5">
+                Belum ada buku di katalog.{' '}
+                <Link href="/books" className="underline font-medium text-forest-700 hover:text-forest-900">
+                  Cari judul lewat OpenLibrary
                 </Link>
               </p>
             </section>
           ) : (
-            <HorizontalShelf title="Sedang Hangat Diperbincangkan" href="/books">
+            <HorizontalShelf title="Banyak diulas" href="/books">
               {hangat.map((b) => (
                 <div key={b.id} className="w-44 md:w-52 shrink-0 snap-start">
                   <BookCard book={b} />
@@ -141,16 +138,11 @@ export default function HomeClient() {
           })}
 
           <section className="pb-6">
-            <div className="flex items-center justify-between gap-3 mb-5">
-              <div className="flex items-center gap-3">
-                <div className="w-1.5 h-7 bg-forest-700 rounded-full" aria-hidden="true" />
-                <h2 className="font-serif text-xl sm:text-2xl font-bold text-forest-900">
-                  Listing Terbaru
-                </h2>
-              </div>
+            <div className="flex items-baseline justify-between gap-3 pb-2.5 mb-5 border-b border-warm-border">
+              <h2 className="type-section text-ink">Baru masuk di lapak</h2>
               <Link
                 href="/marketplace"
-                className="text-xs sm:text-sm font-semibold underline text-forest-700 hover:text-forest-900"
+                className="text-xs sm:text-sm font-medium text-forest-700 hover:text-forest-900 hover:underline underline-offset-4"
               >
                 Lihat semua
               </Link>
@@ -158,15 +150,15 @@ export default function HomeClient() {
 
             {listingsError ? (
               <ErrorState
-                title="Gagal memuat listing terbaru"
+                title="Gagal memuat daftar buku bekas"
                 message={listingsError}
                 onRetry={retry}
               />
             ) : listings.length === 0 ? (
-              <p className="text-stone-600 text-sm bg-white border border-warm-border rounded-xl p-5">
-                Belum ada listing buku bekas saat ini.{' '}
-                <Link href="/jual" className="underline font-semibold text-forest-700">
-                  Mulai jual koleksimu →
+              <p className="text-stone-600 text-sm bg-white border border-warm-border rounded-lg p-5">
+                Belum ada buku bekas yang dijual saat ini.{' '}
+                <Link href="/jual" className="underline font-medium text-forest-700 hover:text-forest-900">
+                  Pasang bukumu
                 </Link>
               </p>
             ) : (

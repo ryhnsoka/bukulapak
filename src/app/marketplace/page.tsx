@@ -12,8 +12,8 @@ import ErrorState from '@/components/ErrorState';
 
 const SORTS = [
   { value: 'newest', label: 'Terbaru' },
-  { value: 'price_asc', label: 'Harga Terendah' },
-  { value: 'price_desc', label: 'Harga Tertinggi' },
+  { value: 'price_asc', label: 'Harga terendah' },
+  { value: 'price_desc', label: 'Harga tertinggi' },
 ];
 
 export default function MarketplacePage() {
@@ -173,8 +173,8 @@ function MarketplaceInner({
   if (urlCity.trim()) {
     activeChips.push({ key: 'location_city', label: `Kota: ${urlCity.trim()}`, resetValue: '' });
   }
-  if (urlMin) activeChips.push({ key: 'min_price', label: `Min Rp ${Number(urlMin).toLocaleString('id-ID')}`, resetValue: '' });
-  if (urlMax) activeChips.push({ key: 'max_price', label: `Maks Rp ${Number(urlMax).toLocaleString('id-ID')}`, resetValue: '' });
+  if (urlMin) activeChips.push({ key: 'min_price', label: `Min Rp\u00A0${Number(urlMin).toLocaleString('id-ID')}`, resetValue: '' });
+  if (urlMax) activeChips.push({ key: 'max_price', label: `Maks Rp\u00A0${Number(urlMax).toLocaleString('id-ID')}`, resetValue: '' });
   if (urlSort !== 'newest') {
     activeChips.push({
       key: 'sort',
@@ -187,18 +187,16 @@ function MarketplaceInner({
     <div className="max-w-6xl mx-auto px-4 py-10">
       <div className="flex flex-wrap items-end justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-3xl font-bold font-serif text-forest-900 mb-1">
-            Marketplace Buku Bekas
-          </h1>
+          <h1 className="type-page-title text-ink mb-1">Marketplace buku bekas</h1>
           <p className="text-stone-600 text-sm">
-            Bandingkan kondisi fisik, foto asli penjual, lokasi, dan harga antarperorangan.
+            Buku bekas dari sesama pembaca. Cek foto kondisi, kota asal, dan harga sebelum memesan.
           </p>
         </div>
         <Link
           href="/jual"
-          className="bg-forest-700 text-cream px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-forest-900 transition shadow-sm"
+          className="bg-forest-700 text-cream px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-forest-900 transition-colors"
         >
-          + Jual Bukumu
+          Jual buku
         </Link>
       </div>
 
@@ -207,11 +205,11 @@ function MarketplaceInner({
           e.preventDefault();
           applyFilters({ page: 1 });
         }}
-        className="bg-white border border-warm-border rounded-2xl p-4 mb-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-6"
+        className="bg-white border border-warm-border rounded-lg p-4 mb-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-6"
       >
         <div className="lg:col-span-2">
           <label htmlFor="mp-q" className="block text-xs font-semibold text-stone-700 mb-1">
-            Judul / Penulis / Penjual
+            Judul, penulis, atau penjual
           </label>
           <input
             id="mp-q"
@@ -219,7 +217,7 @@ function MarketplaceInner({
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder="Cari judul buku…"
-            className="w-full border border-stone-300 rounded-xl px-3 py-2 text-sm bg-white"
+            className="w-full border border-input-border rounded-lg px-3 py-2 text-sm bg-white"
           />
         </div>
 
@@ -231,9 +229,9 @@ function MarketplaceInner({
             id="mp-cond"
             value={urlCondition}
             onChange={(e) => applyFilters({ condition: e.target.value, page: 1 })}
-            className="w-full border border-stone-300 rounded-xl px-3 py-2 text-sm bg-white"
+            className="w-full border border-input-border rounded-lg px-3 py-2 text-sm bg-white"
           >
-            <option value="">Semua Kondisi</option>
+            <option value="">Semua kondisi</option>
             {BOOK_CONDITIONS.map((c) => (
               <option key={c.value} value={c.value}>
                 {c.label}
@@ -251,7 +249,7 @@ function MarketplaceInner({
             value={city}
             onChange={(e) => setCity(e.target.value)}
             placeholder="cth: Bandung"
-            className="w-full border border-stone-300 rounded-xl px-3 py-2 text-sm bg-white"
+            className="w-full border border-input-border rounded-lg px-3 py-2 text-sm bg-white"
           />
         </div>
 
@@ -265,7 +263,7 @@ function MarketplaceInner({
               onChange={(e) => setMinPrice(e.target.value)}
               placeholder="Min"
               aria-label="Harga minimum"
-              className="w-1/2 border border-stone-300 rounded-xl px-2.5 py-2 text-sm bg-white"
+              className="w-1/2 border border-input-border rounded-lg px-2.5 py-2 text-sm bg-white tabular-nums"
             />
             <input
               type="number"
@@ -274,7 +272,7 @@ function MarketplaceInner({
               onChange={(e) => setMaxPrice(e.target.value)}
               placeholder="Maks"
               aria-label="Harga maksimum"
-              className="w-1/2 border border-stone-300 rounded-xl px-2.5 py-2 text-sm bg-white"
+              className="w-1/2 border border-input-border rounded-lg px-2.5 py-2 text-sm bg-white tabular-nums"
             />
           </div>
         </div>
@@ -283,14 +281,14 @@ function MarketplaceInner({
           <div className="flex gap-2">
             <button
               type="submit"
-              className="flex-1 bg-forest-700 text-cream px-4 py-2 rounded-xl text-sm font-semibold hover:bg-forest-900 transition cursor-pointer"
+              className="flex-1 bg-forest-700 text-cream px-4 py-2 rounded-lg text-sm font-medium hover:bg-forest-900 transition-colors cursor-pointer"
             >
               Terapkan
             </button>
             <button
               type="button"
               onClick={resetAll}
-              className="border border-stone-300 px-3 py-2 rounded-xl text-sm text-stone-700 hover:bg-stone-100 cursor-pointer"
+              className="border border-input-border px-3 py-2 rounded-lg text-sm text-ink hover:bg-paper cursor-pointer"
             >
               Reset
             </button>
@@ -300,7 +298,7 @@ function MarketplaceInner({
 
       {activeChips.length > 0 && (
         <div className="flex flex-wrap items-center gap-2 mb-5 text-xs">
-          <span className="text-stone-500 font-medium">Filter aktif:</span>
+          <span className="text-stone-600 font-medium">Filter aktif:</span>
           {activeChips.map((chip) => (
             <button
               key={chip.key}
@@ -312,7 +310,7 @@ function MarketplaceInner({
                 if (chip.key === 'max_price') setMaxPrice('');
                 applyFilters({ [chip.key]: chip.resetValue, page: 1 });
               }}
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-forest-100 text-forest-900 font-semibold hover:bg-forest-100/75 transition cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-forest-100 text-forest-900 font-medium hover:bg-forest-100/75 transition-colors cursor-pointer"
             >
               <span>{chip.label}</span>
               <span aria-hidden="true">✕</span>
@@ -322,7 +320,9 @@ function MarketplaceInner({
       )}
 
       <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
-        <p className="text-sm text-stone-600">{loading ? 'Memuat…' : `${total} listing tersedia`}</p>
+        <p className="text-sm text-stone-600 tabular-nums">
+          {loading ? 'Memuat…' : `${total} buku tersedia`}
+        </p>
         <div className="flex items-center gap-2">
           <label htmlFor="mp-sort" className="text-xs font-semibold text-stone-700">
             Urutkan:
@@ -331,7 +331,7 @@ function MarketplaceInner({
             id="mp-sort"
             value={urlSort}
             onChange={(e) => applyFilters({ sort: e.target.value, page: 1 })}
-            className="border border-stone-300 rounded-xl px-3 py-1.5 text-sm bg-white"
+            className="border border-input-border rounded-lg px-3 py-1.5 text-sm bg-white"
           >
             {SORTS.map((s) => (
               <option key={s.value} value={s.value}>
@@ -347,15 +347,15 @@ function MarketplaceInner({
 
       {!loading && !error && listings.length === 0 && (
         <EmptyState
-          title="Belum ada listing yang cocok"
-          hint="Coba ubah filter kota, kondisi, atau rentang harga."
+          title="Belum ada buku yang sesuai filter"
+          hint="Ubah pilihan kota, kondisi, atau rentang harga untuk melihat tawaran lain."
           action={
             <button
               type="button"
               onClick={resetAll}
-              className="inline-block bg-forest-700 text-cream px-5 py-2 rounded-xl text-sm font-semibold cursor-pointer"
+              className="inline-block bg-forest-700 text-cream px-5 py-2 rounded-lg text-sm font-medium cursor-pointer"
             >
-              Reset Semua Filter
+              Reset filter
             </button>
           }
         />
@@ -375,20 +375,20 @@ function MarketplaceInner({
             type="button"
             disabled={page <= 1}
             onClick={() => applyFilters({ page: page - 1 })}
-            className="px-4 py-2 rounded-xl border border-stone-300 bg-white text-sm disabled:opacity-40 hover:bg-stone-100 cursor-pointer"
+            className="px-4 py-2 rounded-lg border border-input-border bg-white text-sm text-ink disabled:opacity-40 hover:bg-paper cursor-pointer"
           >
-            ← Sebelumnya
+            Sebelumnya
           </button>
-          <span className="text-sm text-stone-600">
+          <span className="text-sm text-stone-600 tabular-nums">
             Halaman {page} dari {lastPage}
           </span>
           <button
             type="button"
             disabled={page >= lastPage}
             onClick={() => applyFilters({ page: page + 1 })}
-            className="px-4 py-2 rounded-xl border border-stone-300 bg-white text-sm disabled:opacity-40 hover:bg-stone-100 cursor-pointer"
+            className="px-4 py-2 rounded-lg border border-input-border bg-white text-sm text-ink disabled:opacity-40 hover:bg-paper cursor-pointer"
           >
-            Berikutnya →
+            Berikutnya
           </button>
         </div>
       )}

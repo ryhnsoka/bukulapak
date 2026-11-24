@@ -33,16 +33,16 @@ const STATUS_STYLE: Record<string, string> = {
 
 const BUYER_NEXT_STEP: Record<string, string> = {
   pending: 'Menunggu penjual mengonfirmasi ketersediaan. Kamu masih bisa membatalkan pesanan.',
-  confirmed: 'Penjual mengonfirmasi! Lanjutkan koordinasi serah-terima/pembayaran lewat Chat BukuLapak.',
-  done: 'Transaksi selesai. Berikan feedback untuk penjual di bawah ini.',
-  cancelled: 'Pesanan dibatalkan; listing kembali tersedia jika belum terjual.',
+  confirmed: 'Penjual sudah mengonfirmasi. Lanjutkan kesepakatan pembayaran atau COD lewat chat.',
+  done: 'Transaksi selesai. Kamu bisa memberi penilaian untuk penjual di bawah.',
+  cancelled: 'Pesanan dibatalkan; status buku kembali tersedia jika belum terjual.',
 };
 
 const SELLER_NEXT_STEP: Record<string, string> = {
-  pending: 'Periksa ketersediaan buku lalu klik Konfirmasi, atau Batal jika stok tidak tersedia.',
-  confirmed: 'Koordinasikan pengiriman/COD lewat Chat, lalu klik Tandai Selesai setelah buku diterima pembeli.',
-  done: 'Transaksi selesai dan listing otomatis ditandai Terjual.',
-  cancelled: 'Pesanan dibatalkan; listing kembali berstatus Tersedia.',
+  pending: 'Periksa ketersediaan buku lalu pilih Konfirmasi, atau batalkan jika stok tidak tersedia.',
+  confirmed: 'Koordinasikan pengiriman atau COD lewat chat, lalu tandai selesai setelah buku diterima pembeli.',
+  done: 'Transaksi selesai dan status buku otomatis menjadi Terjual.',
+  cancelled: 'Pesanan dibatalkan; status buku kembali Tersedia.',
 };
 
 const SHELF_TABS: { key: ShelfKey; label: string }[] = [
@@ -159,9 +159,9 @@ export default function ProfilPage() {
 
   function requestCancelOrder(order: Order) {
     setConfirmState({
-      title: 'Batalkan Pesanan',
-      message: `Batalkan pesanan ${order.code} untuk "${order.listing.book.title}"? Listing akan kembali berstatus Tersedia.`,
-      confirmLabel: 'Ya, Batalkan',
+      title: 'Batalkan pesanan',
+      message: `Batalkan pesanan ${order.code} untuk "${order.listing.book.title}"? Status buku akan kembali Tersedia.`,
+      confirmLabel: 'Ya, batalkan',
       onConfirm: async () => {
         if (!token) return;
         try {
@@ -171,7 +171,7 @@ export default function ProfilPage() {
               o.id === order.id ? { ...o, status: 'cancelled', status_label: 'Dibatalkan' } : o
             )
           );
-          showToast('Pesanan berhasil dibatalkan.', 'success');
+          showToast('Pesanan dibatalkan.', 'success');
         } catch (err: unknown) {
           showToast(
             err instanceof Error ? err.message : 'Gagal membatalkan pesanan.',
@@ -189,23 +189,23 @@ export default function ProfilPage() {
       const res = await api.createList({ title: listTitle.trim(), is_public: listPublic }, token);
       setLists((v) => [res.data.list, ...v]);
       setListTitle('');
-      showToast('Daftar buku kustom dibuat.', 'success');
+      showToast('Daftar bacaan dibuat.', 'success');
     } catch (err: unknown) {
-      showToast(err instanceof Error ? err.message : 'Gagal membuat daftar buku.', 'error');
+      showToast(err instanceof Error ? err.message : 'Gagal membuat daftar bacaan.', 'error');
     }
   }
 
   function requestDeleteList(list: BookList) {
     setConfirmState({
-      title: 'Hapus Daftar Buku',
+      title: 'Hapus daftar bacaan',
       message: `Hapus daftar "${list.title}" secara permanen?`,
-      confirmLabel: 'Ya, Hapus',
+      confirmLabel: 'Ya, hapus',
       onConfirm: async () => {
         if (!token) return;
         try {
           await api.deleteList(list.id, token);
           setLists((v) => v.filter((x) => x.id !== list.id));
-          showToast('Daftar buku dihapus.', 'success');
+          showToast('Daftar bacaan dihapus.', 'success');
         } catch (err: unknown) {
           showToast(err instanceof Error ? err.message : 'Gagal menghapus daftar.', 'error');
         }
@@ -219,27 +219,27 @@ export default function ProfilPage() {
       const res = await api.updateListing(listingId, { status: nextStatus }, token);
       setListings((v) => v.map((l) => (l.id === listingId ? res.data.listing : l)));
       showToast(
-        `Status listing diubah menjadi "${res.data.listing.status_label ?? nextStatus}".`,
+        `Status buku diubah menjadi "${res.data.listing.status_label ?? nextStatus}".`,
         'success'
       );
     } catch (err: unknown) {
-      showToast(err instanceof Error ? err.message : 'Gagal memperbarui listing.', 'error');
+      showToast(err instanceof Error ? err.message : 'Gagal memperbarui status.', 'error');
     }
   }
 
   function requestDeleteMyListing(listing: Listing) {
     setConfirmState({
-      title: 'Hapus Listing',
-      message: `Hapus listing "${listing.book.title}" secara permanen?`,
-      confirmLabel: 'Ya, Hapus',
+      title: 'Hapus dari lapak',
+      message: `Hapus "${listing.book.title}" dari lapak secara permanen?`,
+      confirmLabel: 'Ya, hapus',
       onConfirm: async () => {
         if (!token) return;
         try {
           await api.deleteListing(listing.id, token);
           setListings((v) => v.filter((l) => l.id !== listing.id));
-          showToast('Listing berhasil dihapus.', 'success');
+          showToast('Buku dihapus dari lapak.', 'success');
         } catch (err: unknown) {
-          showToast(err instanceof Error ? err.message : 'Gagal menghapus listing.', 'error');
+          showToast(err instanceof Error ? err.message : 'Gagal menghapus buku.', 'error');
         }
       },
     });
@@ -247,7 +247,7 @@ export default function ProfilPage() {
 
   if (!ready) {
     return (
-      <div className="max-w-6xl mx-auto px-4 py-10 text-sm text-stone-500">
+      <div className="max-w-6xl mx-auto px-4 py-10 text-sm text-stone-600">
         Memeriksa sesi…
       </div>
     );
@@ -256,15 +256,15 @@ export default function ProfilPage() {
   if (!user) {
     return (
       <div className="max-w-md mx-auto px-4 py-16 text-center">
-        <h1 className="text-2xl font-bold font-serif text-forest-900 mb-2">Login dulu</h1>
+        <h1 className="type-page-title text-ink mb-2">Masuk ke akunmu</h1>
         <p className="text-sm text-stone-600 mb-6">
-          Masuk untuk melihat rak buku, daftar bacaan, pesanan, dan listingmu.
+          Buka rak baca, riwayat pesanan, ulasan, dan buku yang sedang kamu jual.
         </p>
         <Link
           href="/login?next=/profil"
-          className="inline-block bg-forest-700 text-cream px-6 py-3 rounded-xl text-sm font-semibold hover:bg-forest-900 transition"
+          className="inline-block bg-forest-700 text-cream px-6 py-3 rounded-lg text-sm font-medium hover:bg-forest-900 transition-colors"
         >
-          Login
+          Masuk
         </Link>
       </div>
     );
@@ -273,10 +273,10 @@ export default function ProfilPage() {
   const activeShelfItems = shelves.filter((s) => s.shelf === activeShelf);
 
   const mainTabs: { key: ProfileTab; label: string }[] = [
-    { key: 'shelves', label: 'Rak & Daftar' },
+    { key: 'shelves', label: 'Rak dan daftar' },
     { key: 'transactions', label: `Transaksi (${orders.length + sales.length})` },
-    { key: 'listings', label: `Listing Saya (${listings.length})` },
-    { key: 'reviews', label: `Review Saya (${reviews.length})` },
+    { key: 'listings', label: `Lapak saya (${listings.length})` },
+    { key: 'reviews', label: `Ulasan saya (${reviews.length})` },
   ];
 
   return (
@@ -284,29 +284,29 @@ export default function ProfilPage() {
       <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
         <div className="flex items-center gap-4">
           <span
-            className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-forest-700 text-cream flex items-center justify-center text-2xl font-bold shrink-0"
+            className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-forest-700 text-cream flex items-center justify-center text-2xl font-semibold shrink-0"
             aria-hidden="true"
           >
             {user.name.charAt(0).toUpperCase()}
           </span>
           <div>
-            <h1 className="text-2xl font-bold font-serif text-forest-900">{user.name}</h1>
+            <h1 className="type-page-title text-ink">{user.name}</h1>
             <p className="text-sm text-stone-600">{user.email}</p>
           </div>
         </div>
 
-        <div className="flex gap-2.5 text-center">
-          <div className="bg-white border border-warm-border rounded-xl px-4 py-2">
-            <p className="text-lg font-bold text-forest-900">{shelfStats.want_to_read}</p>
-            <p className="text-xs text-stone-500">Ingin Dibaca</p>
+        <div className="flex gap-2.5 text-center tabular-nums">
+          <div className="bg-white border border-warm-border rounded-lg px-4 py-2">
+            <p className="text-lg font-semibold text-ink">{shelfStats.want_to_read}</p>
+            <p className="text-xs text-stone-600">Ingin Dibaca</p>
           </div>
-          <div className="bg-white border border-warm-border rounded-xl px-4 py-2">
-            <p className="text-lg font-bold text-forest-900">{shelfStats.reading}</p>
-            <p className="text-xs text-stone-500">Sedang Dibaca</p>
+          <div className="bg-white border border-warm-border rounded-lg px-4 py-2">
+            <p className="text-lg font-semibold text-ink">{shelfStats.reading}</p>
+            <p className="text-xs text-stone-600">Sedang Dibaca</p>
           </div>
-          <div className="bg-white border border-warm-border rounded-xl px-4 py-2">
-            <p className="text-lg font-bold text-forest-900">{shelfStats.finished}</p>
-            <p className="text-xs text-stone-500">Sudah Dibaca</p>
+          <div className="bg-white border border-warm-border rounded-lg px-4 py-2">
+            <p className="text-lg font-semibold text-ink">{shelfStats.finished}</p>
+            <p className="text-xs text-stone-600">Sudah Dibaca</p>
           </div>
         </div>
       </div>
@@ -323,7 +323,7 @@ export default function ProfilPage() {
       <div
         role="tablist"
         aria-label="Bagian profil"
-        className="flex flex-wrap gap-2 border-b border-warm-border pb-3 mb-8"
+        className="flex flex-wrap gap-2 border-b border-warm-border pb-3 mb-8 tabular-nums"
       >
         {mainTabs.map((tab) => {
           const selected = activeTab === tab.key;
@@ -334,10 +334,10 @@ export default function ProfilPage() {
               role="tab"
               aria-selected={selected}
               onClick={() => setActiveTab(tab.key)}
-              className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition cursor-pointer ${
+              className={`px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors cursor-pointer ${
                 selected
-                  ? 'bg-forest-700 text-cream shadow-sm'
-                  : 'bg-white border border-stone-300 text-stone-700 hover:bg-stone-50'
+                  ? 'bg-forest-700 text-cream'
+                  : 'bg-white border border-warm-border text-ink hover:bg-paper'
               }`}
             >
               {tab.label}
@@ -347,23 +347,23 @@ export default function ProfilPage() {
       </div>
 
       {loading ? (
-        <p className="text-sm text-stone-500">Memuat data profil…</p>
+        <p className="text-sm text-stone-600">Memuat data profil…</p>
       ) : (
         <div role="tabpanel">
           {activeTab === 'shelves' && (
             <div className="space-y-10">
               <section>
-                <h2 className="text-xl font-bold font-serif text-forest-900 mb-3">Rak Buku Saya</h2>
-                <div className="flex flex-wrap gap-2 mb-4">
+                <h2 className="type-section text-ink mb-3">Rak buku saya</h2>
+                <div className="flex flex-wrap gap-2 mb-4 tabular-nums">
                   {SHELF_TABS.map((t) => (
                     <button
                       key={t.key}
                       type="button"
                       onClick={() => setActiveShelf(t.key)}
-                      className={`px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition cursor-pointer ${
+                      className={`px-4 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-colors cursor-pointer ${
                         activeShelf === t.key
                           ? 'bg-forest-700 text-cream'
-                          : 'bg-white border border-stone-300 text-stone-700 hover:bg-stone-50'
+                          : 'bg-white border border-warm-border text-ink hover:bg-paper'
                       }`}
                     >
                       {t.label} ({shelves.filter((s) => s.shelf === t.key).length})
@@ -371,10 +371,10 @@ export default function ProfilPage() {
                   ))}
                 </div>
                 {activeShelfItems.length === 0 ? (
-                  <p className="text-sm text-stone-600 bg-white border border-warm-border rounded-xl p-5">
+                  <p className="text-sm text-stone-600 bg-white border border-warm-border rounded-lg p-5">
                     Belum ada buku di rak ini.{' '}
-                    <Link href="/books" className="underline font-semibold text-forest-700">
-                      Jelajahi buku →
+                    <Link href="/books" className="underline font-medium text-forest-700">
+                      Jelajahi katalog
                     </Link>
                   </p>
                 ) : (
@@ -387,13 +387,13 @@ export default function ProfilPage() {
               </section>
 
               <section className="grid md:grid-cols-2 gap-6">
-                <div className="bg-white border border-warm-border rounded-xl p-5">
-                  <h2 className="text-lg font-bold font-serif text-forest-900 mb-3">
-                    Daftar Buku Kustom ({lists.length})
+                <div className="bg-white border border-warm-border rounded-lg p-5">
+                  <h2 className="font-sans font-semibold text-base text-ink mb-3 tabular-nums">
+                    Daftar bacaan ({lists.length})
                   </h2>
                   <form onSubmit={handleCreateList} className="flex flex-col gap-2.5 mb-4">
                     <label htmlFor={listTitleId} className="sr-only">
-                      Nama daftar buku baru
+                      Nama daftar bacaan baru
                     </label>
                     <div className="flex gap-2">
                       <input
@@ -401,11 +401,11 @@ export default function ProfilPage() {
                         value={listTitle}
                         onChange={(e) => setListTitle(e.target.value)}
                         placeholder="Nama daftar baru (cth: Bacaan Liburan)…"
-                        className="flex-1 border border-stone-300 rounded-xl px-3 py-2 text-sm bg-white"
+                        className="flex-1 border border-input-border rounded-lg px-3 py-2 text-sm bg-white"
                       />
                       <button
                         type="submit"
-                        className="bg-forest-700 text-cream px-4 py-2 rounded-xl text-xs font-semibold hover:bg-forest-900 cursor-pointer"
+                        className="bg-forest-700 text-cream px-4 py-2 rounded-lg text-xs font-medium hover:bg-forest-900 cursor-pointer"
                       >
                         Buat
                       </button>
@@ -425,17 +425,17 @@ export default function ProfilPage() {
                   </form>
 
                   {lists.length === 0 ? (
-                    <p className="text-xs text-stone-500">Belum ada daftar kustom.</p>
+                    <p className="text-xs text-stone-600">Belum ada daftar bacaan kustom.</p>
                   ) : (
                     <ul className="space-y-2">
                       {lists.map((l) => (
                         <li
                           key={l.id}
-                          className="flex items-center justify-between gap-2 border border-stone-200 rounded-xl px-3 py-2.5 text-sm"
+                          className="flex items-center justify-between gap-2 border border-warm-border rounded-lg px-3 py-2.5 text-sm"
                         >
                           <div>
-                            <span className="font-semibold text-stone-900">{l.title}</span>
-                            <span className="text-xs text-stone-500 ml-2">
+                            <span className="font-medium text-ink">{l.title}</span>
+                            <span className="text-xs text-stone-600 ml-2 tabular-nums">
                               ({l.is_public ? 'Publik' : 'Privat'}) •{' '}
                               {l.books_count ?? l.books?.length ?? 0} buku
                             </span>
@@ -443,7 +443,7 @@ export default function ProfilPage() {
                           <button
                             type="button"
                             onClick={() => requestDeleteList(l)}
-                            className="text-xs text-red-700 font-semibold hover:underline cursor-pointer"
+                            className="text-xs text-red-700 font-medium hover:underline cursor-pointer"
                           >
                             Hapus
                           </button>
@@ -453,31 +453,27 @@ export default function ProfilPage() {
                   )}
                 </div>
 
-                <div className="bg-white border border-warm-border rounded-xl p-5">
-                  <h2 className="text-lg font-bold font-serif text-forest-900 mb-1">
-                    Rekomendasi Untukmu
+                <div className="bg-white border border-warm-border rounded-lg p-5">
+                  <h2 className="font-sans font-semibold text-base text-ink mb-1">
+                    Rekomendasi untukmu
                   </h2>
-                  <p className="text-xs text-stone-500 mb-3">
+                  <p className="text-xs text-stone-600 mb-3">
                     {recs.basis_genres.length > 0
                       ? `Berdasarkan genre dari rak bukumu: ${recs.basis_genres.join(', ')}.`
-                      : 'Tambahkan buku ke rakmu untuk mendapatkan rekomendasi berdasarkan genre.'}
+                      : 'Tambahkan buku ke rakmu untuk melihat saran judul segenre.'}
                   </p>
                   {recs.books.length === 0 ? (
-                    <p className="text-xs text-stone-500">
-                      Belum ada rekomendasi tambahan saat ini.
-                    </p>
+                    <p className="text-xs text-stone-600">Belum ada rekomendasi tambahan saat ini.</p>
                   ) : (
                     <div className="grid grid-cols-2 gap-3">
                       {recs.books.slice(0, 4).map((b) => (
                         <Link
                           key={b.id}
                           href={`/books/${b.id}`}
-                          className="border border-stone-200 rounded-xl p-3 hover:border-forest-700 transition bg-stone-50/40"
+                          className="border border-warm-border rounded-lg p-3 hover:border-forest-700 transition-colors bg-paper/40"
                         >
-                          <p className="font-semibold text-xs text-stone-900 line-clamp-2">
-                            {b.title}
-                          </p>
-                          <p className="text-xs text-stone-500 line-clamp-1 mt-0.5">
+                          <p className="font-semibold text-xs text-ink line-clamp-2">{b.title}</p>
+                          <p className="text-xs text-stone-600 line-clamp-1 mt-0.5">
                             {b.authors?.join(', ')}
                           </p>
                         </Link>
@@ -491,25 +487,25 @@ export default function ProfilPage() {
 
           {activeTab === 'transactions' && (
             <div>
-              <div className="flex flex-wrap gap-2 mb-5">
+              <div className="flex flex-wrap gap-2 mb-5 tabular-nums">
                 <button
                   type="button"
                   onClick={() => setTxSubTab('orders')}
-                  className={`px-4 py-1.5 rounded-full text-xs font-semibold transition cursor-pointer ${
+                  className={`px-4 py-1.5 rounded-md text-xs font-medium transition-colors cursor-pointer ${
                     txSubTab === 'orders'
                       ? 'bg-forest-700 text-cream'
-                      : 'bg-white border border-stone-300 text-stone-700'
+                      : 'bg-white border border-warm-border text-ink hover:bg-paper'
                   }`}
                 >
-                  Pesanan Saya ({orders.length})
+                  Pesanan saya ({orders.length})
                 </button>
                 <button
                   type="button"
                   onClick={() => setTxSubTab('sales')}
-                  className={`px-4 py-1.5 rounded-full text-xs font-semibold transition cursor-pointer ${
+                  className={`px-4 py-1.5 rounded-md text-xs font-medium transition-colors cursor-pointer ${
                     txSubTab === 'sales'
                       ? 'bg-forest-700 text-cream'
-                      : 'bg-white border border-stone-300 text-stone-700'
+                      : 'bg-white border border-warm-border text-ink hover:bg-paper'
                   }`}
                 >
                   Penjualan ({sales.length})
@@ -518,47 +514,50 @@ export default function ProfilPage() {
 
               {txSubTab === 'orders' ? (
                 orders.length === 0 ? (
-                  <p className="text-stone-600 text-sm bg-white border border-warm-border rounded-xl p-5">
+                  <p className="text-stone-600 text-sm bg-white border border-warm-border rounded-lg p-5">
                     Belum ada pesanan pembelian.
                   </p>
                 ) : (
                   <div className="flex flex-col gap-3">
                     {orders.map((o) => (
-                      <div key={o.id} className="bg-white border border-warm-border rounded-xl p-4">
+                      <div key={o.id} className="bg-white border border-warm-border rounded-lg p-4">
                         <div className="flex flex-wrap items-center gap-3">
                           <div className="flex-1 min-w-48">
-                            <p className="font-bold text-sm text-stone-900">
-                              {o.code} • {o.listing.book.title}
+                            <p className="font-semibold text-sm text-ink">
+                              <span className="font-mono text-xs">{o.code}</span> •{' '}
+                              {o.listing.book.title}
                             </p>
-                            <p className="text-xs text-stone-500">
-                              {o.price === 0 ? 'Gratis' : `Rp ${o.price.toLocaleString('id-ID')}`}{' '}
+                            <p className="text-xs text-stone-600 tabular-nums">
+                              {o.price === 0
+                                ? 'Gratis'
+                                : `Rp\u00A0${o.price.toLocaleString('id-ID')}`}{' '}
                               • Penjual: {o.seller.name}
                             </p>
                           </div>
                           <span
-                            className={`text-xs px-2.5 py-1 rounded-full font-semibold ${
-                              STATUS_STYLE[o.status] ?? 'bg-stone-100 text-stone-600'
+                            className={`text-xs px-2.5 py-0.5 rounded-sm font-medium ${
+                              STATUS_STYLE[o.status] ?? 'bg-stone-100 text-stone-700'
                             }`}
                           >
                             {o.status_label ?? o.status}
                           </span>
                           <Link
                             href="/chat"
-                            className="text-xs border border-forest-700 text-forest-900 px-3 py-1.5 rounded-xl font-semibold hover:bg-forest-50"
+                            className="text-xs border border-forest-700 text-forest-900 px-3 py-1.5 rounded-lg font-medium hover:bg-forest-50"
                           >
-                            Chat Penjual
+                            Chat penjual
                           </Link>
                           {o.status === 'pending' && (
                             <button
                               type="button"
                               onClick={() => requestCancelOrder(o)}
-                              className="text-xs text-red-700 font-semibold underline cursor-pointer"
+                              className="text-xs text-red-700 font-medium underline cursor-pointer"
                             >
                               Batalkan
                             </button>
                           )}
                         </div>
-                        <p className="text-xs text-stone-600 mt-2.5 bg-stone-50 rounded-xl px-3 py-2">
+                        <p className="text-xs text-stone-700 mt-2.5 bg-paper rounded-lg px-3 py-2">
                           <strong>Langkah berikutnya:</strong> {BUYER_NEXT_STEP[o.status] ?? ''}
                         </p>
                         {o.status === 'done' && (
@@ -577,26 +576,29 @@ export default function ProfilPage() {
                   </div>
                 )
               ) : sales.length === 0 ? (
-                <p className="text-stone-600 text-sm bg-white border border-warm-border rounded-xl p-5">
-                  Belum ada pesanan masuk pada listingmu.
+                <p className="text-stone-600 text-sm bg-white border border-warm-border rounded-lg p-5">
+                  Belum ada pesanan masuk pada bukumu.
                 </p>
               ) : (
                 <div className="flex flex-col gap-3">
                   {sales.map((o) => (
-                    <div key={o.id} className="bg-white border border-warm-border rounded-xl p-4">
+                    <div key={o.id} className="bg-white border border-warm-border rounded-lg p-4">
                       <div className="flex flex-wrap items-center gap-3">
                         <div className="flex-1 min-w-48">
-                          <p className="font-bold text-sm text-stone-900">
-                            {o.code} • {o.listing.book.title}
+                          <p className="font-semibold text-sm text-ink">
+                            <span className="font-mono text-xs">{o.code}</span> •{' '}
+                            {o.listing.book.title}
                           </p>
-                          <p className="text-xs text-stone-500">
+                          <p className="text-xs text-stone-600 tabular-nums">
                             Pembeli: {o.buyer_name} •{' '}
-                            {o.price === 0 ? 'Gratis' : `Rp ${o.price.toLocaleString('id-ID')}`}
+                            {o.price === 0
+                              ? 'Gratis'
+                              : `Rp\u00A0${o.price.toLocaleString('id-ID')}`}
                           </p>
                         </div>
                         <span
-                          className={`text-xs px-2.5 py-1 rounded-full font-semibold ${
-                            STATUS_STYLE[o.status] ?? 'bg-stone-100 text-stone-600'
+                          className={`text-xs px-2.5 py-0.5 rounded-sm font-medium ${
+                            STATUS_STYLE[o.status] ?? 'bg-stone-100 text-stone-700'
                           }`}
                         >
                           {o.status_label ?? o.status}
@@ -605,7 +607,7 @@ export default function ProfilPage() {
                           <button
                             type="button"
                             onClick={() => setOrderStatus(o.id, 'confirmed')}
-                            className="text-xs bg-forest-700 text-cream px-3 py-1.5 rounded-xl font-semibold hover:bg-forest-900 transition cursor-pointer"
+                            className="text-xs bg-forest-700 text-cream px-3 py-1.5 rounded-lg font-medium hover:bg-forest-900 transition-colors cursor-pointer"
                           >
                             Konfirmasi
                           </button>
@@ -614,22 +616,22 @@ export default function ProfilPage() {
                           <button
                             type="button"
                             onClick={() => setOrderStatus(o.id, 'done')}
-                            className="text-xs bg-forest-700 text-cream px-3 py-1.5 rounded-xl font-semibold hover:bg-forest-900 transition cursor-pointer"
+                            className="text-xs bg-forest-700 text-cream px-3 py-1.5 rounded-lg font-medium hover:bg-forest-900 transition-colors cursor-pointer"
                           >
-                            Tandai Selesai
+                            Tandai selesai
                           </button>
                         )}
                         {(o.status === 'pending' || o.status === 'confirmed') && (
                           <button
                             type="button"
                             onClick={() => setOrderStatus(o.id, 'cancelled')}
-                            className="text-xs text-red-700 font-semibold underline cursor-pointer"
+                            className="text-xs text-red-700 font-medium underline cursor-pointer"
                           >
                             Batalkan
                           </button>
                         )}
                       </div>
-                      <p className="text-xs text-stone-600 mt-2.5 bg-stone-50 rounded-xl px-3 py-2">
+                      <p className="text-xs text-stone-700 mt-2.5 bg-paper rounded-lg px-3 py-2">
                         <strong>Langkah berikutnya:</strong> {SELLER_NEXT_STEP[o.status] ?? ''}
                       </p>
                     </div>
@@ -642,10 +644,10 @@ export default function ProfilPage() {
           {activeTab === 'listings' && (
             <div>
               {listings.length === 0 ? (
-                <p className="text-stone-600 text-sm bg-white border border-warm-border rounded-xl p-5">
-                  Belum ada listing.{' '}
-                  <Link href="/jual" className="underline font-semibold text-forest-700">
-                    Jual buku →
+                <p className="text-stone-600 text-sm bg-white border border-warm-border rounded-lg p-5">
+                  Belum ada buku yang kamu jual.{' '}
+                  <Link href="/jual" className="underline font-medium text-forest-700">
+                    Jual buku
                   </Link>
                 </p>
               ) : (
@@ -653,20 +655,20 @@ export default function ProfilPage() {
                   {listings.map((l) => (
                     <div key={l.id} className="flex flex-col gap-2">
                       <ListingCard listing={l} />
-                      <div className="flex flex-wrap gap-1.5 bg-white border border-warm-border rounded-xl p-2">
+                      <div className="flex flex-wrap gap-1.5 bg-white border border-warm-border rounded-lg p-2">
                         {l.status === 'active' ? (
                           <>
                             <button
                               type="button"
                               onClick={() => updateMyListingStatus(l.id, 'sold')}
-                              className="text-xs px-2.5 py-1 rounded-lg bg-forest-700 text-cream font-semibold hover:bg-forest-900 cursor-pointer"
+                              className="text-xs px-2.5 py-1 rounded-md bg-forest-700 text-cream font-medium hover:bg-forest-900 cursor-pointer"
                             >
-                              Tandai Terjual
+                              Tandai terjual
                             </button>
                             <button
                               type="button"
                               onClick={() => updateMyListingStatus(l.id, 'hidden')}
-                              className="text-xs px-2.5 py-1 rounded-lg border border-stone-300 text-stone-700 hover:bg-stone-100 cursor-pointer"
+                              className="text-xs px-2.5 py-1 rounded-md border border-input-border text-ink hover:bg-paper cursor-pointer"
                             >
                               Sembunyikan
                             </button>
@@ -675,15 +677,15 @@ export default function ProfilPage() {
                           <button
                             type="button"
                             onClick={() => updateMyListingStatus(l.id, 'active')}
-                            className="text-xs px-2.5 py-1 rounded-lg border border-forest-700 text-forest-900 font-semibold hover:bg-forest-50 cursor-pointer"
+                            className="text-xs px-2.5 py-1 rounded-md border border-forest-700 text-forest-900 font-medium hover:bg-forest-50 cursor-pointer"
                           >
-                            Aktifkan Lagi
+                            Aktifkan lagi
                           </button>
                         )}
                         <button
                           type="button"
                           onClick={() => requestDeleteMyListing(l)}
-                          className="text-xs px-2.5 py-1 rounded-lg text-red-700 font-semibold hover:bg-red-50 ml-auto cursor-pointer"
+                          className="text-xs px-2.5 py-1 rounded-md text-red-700 font-medium hover:bg-red-50 ml-auto cursor-pointer"
                         >
                           Hapus
                         </button>
@@ -698,8 +700,8 @@ export default function ProfilPage() {
           {activeTab === 'reviews' && (
             <div>
               {reviews.length === 0 ? (
-                <p className="text-stone-600 text-sm bg-white border border-warm-border rounded-xl p-5">
-                  Belum ada review yang ditulis.
+                <p className="text-stone-600 text-sm bg-white border border-warm-border rounded-lg p-5">
+                  Belum ada ulasan yang ditulis.
                 </p>
               ) : (
                 <div className="grid gap-4 md:grid-cols-2">
@@ -750,8 +752,8 @@ function TransactionFeedbackBox({
 
   if (order.feedback) {
     return (
-      <p className="text-xs text-forest-700 font-medium mt-2">
-        Feedback transaksi terkirim ({order.feedback.rating}/5★)
+      <p className="text-xs text-forest-800 font-medium mt-2 tabular-nums">
+        Penilaian terkirim ({order.feedback.rating}/5★)
         {order.feedback.comment ? `: "${order.feedback.comment}"` : ''}
       </p>
     );
@@ -769,9 +771,9 @@ function TransactionFeedbackBox({
         token
       );
       onSubmitted(res.data.feedback);
-      showToast('Feedback penjual berhasil dikirim.', 'success');
+      showToast('Penilaian untuk penjual terkirim.', 'success');
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Gagal mengirim feedback');
+      setError(err instanceof Error ? err.message : 'Gagal mengirim penilaian');
     } finally {
       setSending(false);
     }
@@ -780,14 +782,14 @@ function TransactionFeedbackBox({
   return (
     <form
       onSubmit={submit}
-      className="mt-3 pt-3 border-t border-stone-100 flex flex-wrap items-center gap-2"
+      className="mt-3 pt-3 border-t border-warm-border flex flex-wrap items-center gap-2"
     >
-      <span className="text-xs font-semibold text-stone-700">Nilai Penjual &amp; Kondisi:</span>
+      <span className="text-xs font-semibold text-stone-700">Nilai penjual dan kondisi buku:</span>
       <select
         value={rating}
         onChange={(e) => setRating(Number(e.target.value))}
-        aria-label="Rating penjual"
-        className="border border-stone-300 rounded-lg px-2 py-1 text-xs bg-white"
+        aria-label="Nilai penjual"
+        className="border border-input-border rounded-lg px-2 py-1 text-xs bg-white tabular-nums"
       >
         {[5, 4, 3, 2, 1].map((n) => (
           <option key={n} value={n}>
@@ -798,16 +800,16 @@ function TransactionFeedbackBox({
       <input
         value={comment}
         onChange={(e) => setComment(e.target.value)}
-        placeholder="Komentar transaksi (opsional)…"
-        aria-label="Komentar transaksi"
-        className="flex-1 min-w-44 border border-stone-300 rounded-lg px-2.5 py-1 text-xs bg-white"
+        placeholder="Catatan singkat soal kondisi buku atau transaksi…"
+        aria-label="Catatan transaksi"
+        className="flex-1 min-w-44 border border-input-border rounded-lg px-2.5 py-1 text-xs bg-white"
       />
       <button
         type="submit"
         disabled={sending}
-        className="bg-forest-700 text-cream text-xs font-semibold px-3 py-1.5 rounded-lg disabled:opacity-50 cursor-pointer"
+        className="bg-forest-700 text-cream text-xs font-medium px-3 py-1.5 rounded-lg hover:bg-forest-900 disabled:opacity-50 cursor-pointer"
       >
-        {sending ? 'Mengirim…' : 'Kirim Feedback'}
+        {sending ? 'Mengirim…' : 'Kirim penilaian'}
       </button>
       {error && <span className="text-xs text-red-700 w-full">{error}</span>}
     </form>

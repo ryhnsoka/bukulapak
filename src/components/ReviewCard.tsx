@@ -53,10 +53,10 @@ export default function ReviewCard({
     if (!token) return;
     try {
       await api.deleteReview(review.id, token);
-      showToast('Review berhasil dihapus.', 'success');
+      showToast('Ulasan dihapus.', 'success');
       onDeleted?.(review.id);
     } catch (err: unknown) {
-      showToast(err instanceof Error ? err.message : 'Gagal menghapus review.', 'error');
+      showToast(err instanceof Error ? err.message : 'Gagal menghapus ulasan.', 'error');
     }
   }
 
@@ -76,20 +76,20 @@ export default function ReviewCard({
 
   return (
     <>
-      <article className="bg-white rounded-xl shadow-sm border border-warm-border transition-all duration-200 hover:shadow-md hover:border-forest-500 p-5 flex flex-col">
+      <article className="bg-white rounded-lg border border-warm-border transition-colors duration-150 hover:border-stone-400 p-5 flex flex-col">
         <div className="flex items-center justify-between mb-3 gap-2">
           <div className="flex items-center gap-3">
             <span
-              className="w-10 h-10 rounded-full bg-forest-700 text-cream flex items-center justify-center font-bold shrink-0"
+              className="w-10 h-10 rounded-full bg-forest-700 text-cream flex items-center justify-center font-semibold shrink-0"
               aria-hidden="true"
             >
               {(review.user?.name ?? '?').charAt(0).toUpperCase()}
             </span>
             <div>
-              <p className="text-sm font-semibold text-stone-900">
-                {review.user?.name ?? 'Pengguna'}
+              <p className="text-sm font-semibold text-ink">
+                {review.user?.name ?? 'Pembaca'}
               </p>
-              <p className="text-xs text-stone-500">
+              <p className="text-xs text-stone-600 tabular-nums">
                 {new Date(review.created_at).toLocaleDateString('id-ID')}
               </p>
             </div>
@@ -98,7 +98,7 @@ export default function ReviewCard({
         </div>
 
         {review.title && (
-          <h3 className="font-serif font-bold text-forest-900 mb-1.5">{review.title}</h3>
+          <h3 className="type-card-title text-base text-ink mb-1.5">{review.title}</h3>
         )}
 
         <div className="flex gap-3 mb-4 flex-1">
@@ -108,10 +108,10 @@ export default function ReviewCard({
                 <img
                   src={review.book.cover_url}
                   alt={review.book.title}
-                  className="w-14 h-20 object-cover rounded-lg shadow-sm"
+                  className="w-14 h-20 object-cover rounded-sm border border-warm-border"
                 />
               ) : (
-                <div className="w-14 h-20 bg-forest-50 border border-warm-border rounded-lg flex items-center justify-center text-forest-900 font-serif text-xs px-1 text-center">
+                <div className="w-14 h-20 bg-paper border border-warm-border rounded-sm flex items-center justify-center text-forest-900 font-serif text-xs px-1 text-center">
                   {review.book.title}
                 </div>
               )}
@@ -119,26 +119,26 @@ export default function ReviewCard({
           )}
 
           {review.is_spoiler && !showSpoiler ? (
-            <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-900 flex-1">
-              Review ini ditandai mengandung spoiler.{' '}
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-950 flex-1">
+              Ulasan ini memuat bocoran cerita.{' '}
               <button
                 type="button"
                 onClick={() => setShowSpoiler(true)}
-                className="underline font-semibold cursor-pointer"
+                className="underline font-medium cursor-pointer"
               >
-                Tampilkan spoiler
+                Buka isi ulasan
               </button>
             </div>
           ) : (
-            <p className="text-sm text-stone-700 leading-relaxed">{review.content}</p>
+            <p className="type-prose text-sm text-stone-700">{review.content}</p>
           )}
         </div>
 
-        <div className="flex items-center gap-3 text-xs pt-3 border-t border-stone-100">
+        <div className="flex items-center gap-3 text-xs pt-3 border-t border-warm-border/75">
           {review.book && (
             <Link
               href={`/books/${review.book.id}`}
-              className="text-forest-700 underline font-semibold truncate"
+              className="text-forest-700 underline font-medium truncate"
             >
               {review.book.title}
             </Link>
@@ -148,7 +148,7 @@ export default function ReviewCard({
             <button
               type="button"
               onClick={() => setReportOpen(true)}
-              className="text-stone-500 hover:text-red-700 underline cursor-pointer"
+              className="text-stone-600 hover:text-red-700 underline cursor-pointer"
             >
               Laporkan
             </button>
@@ -158,22 +158,22 @@ export default function ReviewCard({
               type="button"
               onClick={toggleLike}
               disabled={liking}
-              className={`px-3 py-1 rounded-full border transition cursor-pointer ${
+              className={`px-3 py-1 rounded-md border tabular-nums transition-colors cursor-pointer ${
                 liked
-                  ? 'bg-forest-50 border-forest-700 text-forest-900 font-semibold'
-                  : 'border-stone-300 text-stone-600 hover:bg-stone-100'
+                  ? 'bg-forest-50 border-forest-700 text-forest-900 font-medium'
+                  : 'border-warm-border text-stone-700 hover:bg-paper'
               }`}
             >
               ♥ {likes}
             </button>
           ) : (
-            <span className="text-stone-500">♥ {likes}</span>
+            <span className="text-stone-600 tabular-nums">♥ {likes}</span>
           )}
           {user?.id === review.user_id && (
             <button
               type="button"
               onClick={() => setConfirmOpen(true)}
-              className="text-red-700 font-semibold hover:underline cursor-pointer"
+              className="text-red-700 font-medium hover:underline cursor-pointer"
             >
               Hapus
             </button>
@@ -183,16 +183,16 @@ export default function ReviewCard({
 
       <ConfirmDialog
         open={confirmOpen}
-        title="Hapus Review"
-        message="Hapus review ini secara permanen? Rating rata-rata buku akan dihitung ulang."
-        confirmLabel="Ya, Hapus"
+        title="Hapus ulasan"
+        message="Hapus ulasan ini secara permanen? Nilai rata-rata buku akan dihitung ulang."
+        confirmLabel="Ya, hapus"
         onConfirm={handleConfirmDelete}
         onCancel={() => setConfirmOpen(false)}
       />
 
       <ReportDialog
         open={reportOpen}
-        targetLabel={`Review oleh ${review.user?.name ?? 'pengguna'}`}
+        targetLabel={`Ulasan oleh ${review.user?.name ?? 'pembaca'}`}
         onSubmit={handleSubmitReport}
         onCancel={() => setReportOpen(false)}
       />

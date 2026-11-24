@@ -13,19 +13,19 @@ export default function BookCoverFallback({
 }) {
   return (
     <div
-      className={`w-full h-full flex overflow-hidden bg-gradient-to-br from-forest-800 via-forest-700 to-forest-900 text-cream select-none ${className}`}
+      className={`w-full h-full flex overflow-hidden bg-forest-800 text-cream select-none ${className}`}
     >
-      <div className="w-3 shrink-0 bg-black/20 border-r border-white/15" aria-hidden="true" />
+      <div className="w-2.5 shrink-0 bg-black/20 border-r border-cream/15" aria-hidden="true" />
       <div className="flex-1 p-2.5 sm:p-3 flex">
-        <div className="w-full h-full border border-cream/25 rounded-md p-2.5 flex flex-col justify-between text-left">
-          <span className="text-[10px] font-sans uppercase tracking-widest text-cream/80 font-semibold">
+        <div className="w-full h-full border border-cream/20 rounded-[2px] p-2.5 flex flex-col justify-between text-left">
+          <span className="text-[10px] font-sans tracking-[0.08em] text-cream/70 font-medium">
             BukuLapak
           </span>
-          <p className="font-serif font-bold text-cream leading-snug line-clamp-3 text-sm sm:text-base my-auto py-1">
+          <p className="font-serif font-medium text-cream leading-snug line-clamp-3 text-sm sm:text-base my-auto py-1">
             {title}
           </p>
           {subtitle ? (
-            <p className="text-[11px] font-sans text-cream/85 line-clamp-1">{subtitle}</p>
+            <p className="text-[11px] font-sans text-cream/80 line-clamp-1">{subtitle}</p>
           ) : (
             <span aria-hidden="true" />
           )}

@@ -53,7 +53,7 @@ export function validateIsbn(raw: string): IsbnValidationResult {
         valid: false,
         normalized,
         error:
-          'Digit pemeriksa (checksum) ISBN-10 tidak valid — cek kembali angka ISBN di buku.',
+          'Digit pemeriksa (checksum) ISBN-10 tidak valid; periksa kembali angka ISBN di buku.',
       };
     }
 
@@ -88,7 +88,7 @@ export function validateIsbn(raw: string): IsbnValidationResult {
         valid: false,
         normalized,
         error:
-          'Digit pemeriksa (checksum) ISBN-13 tidak valid — cek kembali angka ISBN di buku.',
+          'Digit pemeriksa (checksum) ISBN-13 tidak valid; periksa kembali angka ISBN di buku.',
       };
     }
 

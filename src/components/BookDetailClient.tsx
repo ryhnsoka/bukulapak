@@ -103,13 +103,15 @@ export default function BookDetailClient({ bookId }: { bookId: string }) {
   if (notFoundErr) {
     return (
       <div className="max-w-3xl mx-auto px-4 py-12 text-center">
-        <h1 className="font-serif text-2xl font-bold text-forest-900 mb-2">Buku Tidak Ditemukan</h1>
-        <p className="text-sm text-stone-600 mb-6">Data buku tidak tersedia atau sudah dihapus.</p>
+        <h1 className="type-page-title text-ink mb-2">Buku tidak ditemukan</h1>
+        <p className="text-sm text-stone-600 mb-6">
+          Halaman buku ini tidak tersedia atau sudah dihapus.
+        </p>
         <Link
           href="/books"
-          className="inline-block bg-forest-700 text-cream px-5 py-2.5 rounded-xl text-sm font-semibold"
+          className="inline-block bg-forest-700 text-cream px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-forest-900 transition-colors"
         >
-          ← Kembali ke Pencarian
+          Kembali ke katalog
         </Link>
       </div>
     );
@@ -119,7 +121,7 @@ export default function BookDetailClient({ bookId }: { bookId: string }) {
     return (
       <div className="max-w-3xl mx-auto px-4 py-12">
         <Link href="/books" className="text-sm text-stone-600 underline mb-4 inline-block">
-          ← Kembali ke pencarian
+          Kembali ke katalog
         </Link>
         <ErrorState
           title="Gagal memuat detail buku"
@@ -135,22 +137,32 @@ export default function BookDetailClient({ bookId }: { bookId: string }) {
     .map((l) => ({ ...l, book }))
     .sort((a, b) => a.price - b.price);
 
+  const hasColophon = Boolean(
+    book.publisher ||
+      book.published_date ||
+      book.isbn ||
+      book.language ||
+      book.format ||
+      book.edition_label ||
+      book.page_count
+  );
+
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
       <nav aria-label="Breadcrumb" className="text-xs text-stone-600 mb-6 flex flex-wrap items-center gap-1.5">
-        <Link href="/" className="underline hover:text-stone-900">
+        <Link href="/" className="underline hover:text-ink">
           Beranda
         </Link>
         <span aria-hidden="true">/</span>
-        <Link href="/books" className="underline hover:text-stone-900">
+        <Link href="/books" className="underline hover:text-ink">
           Katalog
         </Link>
         <span aria-hidden="true">/</span>
-        <span className="font-semibold text-stone-900">{book.title}</span>
+        <span className="font-medium text-ink">{book.title}</span>
       </nav>
 
       <div className="grid md:grid-cols-3 gap-8 mb-10">
-        <div className="max-w-[230px] sm:max-w-[250px] mx-auto md:mx-0 w-full aspect-[2/3] rounded-2xl overflow-hidden shadow-lg ring-1 ring-black/5 bg-stone-100">
+        <div className="max-w-[230px] sm:max-w-[250px] mx-auto md:mx-0 w-full aspect-[2/3] rounded-sm overflow-hidden shadow-md ring-1 ring-black/10 bg-paper">
           <BookCoverImage
             key={book.cover_url ?? 'none'}
             src={book.cover_url}
@@ -168,64 +180,71 @@ export default function BookDetailClient({ bookId }: { bookId: string }) {
         </div>
 
         <div className="md:col-span-2">
-          <h1 className="font-serif text-3xl sm:text-4xl text-forest-900 font-bold mb-1">
-            {book.title}
-          </h1>
+          <h1 className="type-book-title text-ink mb-1.5">{book.title}</h1>
           <p className="text-stone-600 text-base mb-3">
             {book.authors?.length
               ? book.authors.join(', ')
               : book.isbn
                 ? `ISBN ${book.isbn}`
-                : 'Penulis tidak diketahui'}
+                : 'Penulis tidak tercatat'}
           </p>
 
-          <div className="flex items-center gap-2 mb-4">
+          <div className="flex items-center gap-2 mb-4 tabular-nums">
             <Stars value={book.avg_rating} />
-            <span className="text-sm font-semibold text-stone-700">
-              {book.avg_rating ? `${Number(book.avg_rating).toFixed(1)}/5` : 'Belum ada rating'}
+            <span className="text-sm font-medium text-ink">
+              {book.avg_rating ? `${Number(book.avg_rating).toFixed(1)}/5` : 'Belum dinilai'}
             </span>
-            <span className="text-sm text-stone-500">
-              ({book.ratings_count ?? reviews.length} review)
+            <span className="text-sm text-stone-600">
+              ({book.ratings_count ?? reviews.length} ulasan)
             </span>
           </div>
 
-          <div className="flex flex-wrap gap-2 text-xs text-stone-700 mb-4">
-            {book.publisher && (
-              <span className="bg-white border border-warm-border px-2.5 py-1 rounded-lg">
-                Penerbit: <strong>{book.publisher}</strong>
-              </span>
-            )}
-            {book.published_date && (
-              <span className="bg-white border border-warm-border px-2.5 py-1 rounded-lg">
-                Terbit: <strong>{book.published_date}</strong>
-              </span>
-            )}
-            {book.isbn && (
-              <span className="bg-white border border-warm-border px-2.5 py-1 rounded-lg">
-                ISBN: <strong>{book.isbn}</strong>
-              </span>
-            )}
-            {book.language && (
-              <span className="bg-white border border-warm-border px-2.5 py-1 rounded-lg">
-                Bahasa: <strong>{book.language.toUpperCase()}</strong>
-              </span>
-            )}
-            {book.format && (
-              <span className="bg-white border border-warm-border px-2.5 py-1 rounded-lg">
-                Format: <strong>{book.format}</strong>
-              </span>
-            )}
-            {book.edition_label && (
-              <span className="bg-white border border-warm-border px-2.5 py-1 rounded-lg">
-                Edisi: <strong>{book.edition_label}</strong>
-              </span>
-            )}
-            {book.page_count && (
-              <span className="bg-white border border-warm-border px-2.5 py-1 rounded-lg">
-                Halaman: <strong>{book.page_count}</strong>
-              </span>
-            )}
-          </div>
+          {hasColophon && (
+            <dl className="grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-2.5 py-3.5 my-4 border-y border-warm-border text-xs">
+              {book.publisher && (
+                <div>
+                  <dt className="text-stone-600">Penerbit</dt>
+                  <dd className="font-medium text-ink">{book.publisher}</dd>
+                </div>
+              )}
+              {book.published_date && (
+                <div>
+                  <dt className="text-stone-600">Terbit</dt>
+                  <dd className="font-medium text-ink tabular-nums">{book.published_date}</dd>
+                </div>
+              )}
+              {book.isbn && (
+                <div>
+                  <dt className="text-stone-600">ISBN</dt>
+                  <dd className="font-mono font-medium text-ink tabular-nums">{book.isbn}</dd>
+                </div>
+              )}
+              {book.language && (
+                <div>
+                  <dt className="text-stone-600">Bahasa</dt>
+                  <dd className="font-medium text-ink">{book.language.toUpperCase()}</dd>
+                </div>
+              )}
+              {book.format && (
+                <div>
+                  <dt className="text-stone-600">Format</dt>
+                  <dd className="font-medium text-ink">{book.format}</dd>
+                </div>
+              )}
+              {book.edition_label && (
+                <div>
+                  <dt className="text-stone-600">Edisi</dt>
+                  <dd className="font-medium text-ink">{book.edition_label}</dd>
+                </div>
+              )}
+              {book.page_count && (
+                <div>
+                  <dt className="text-stone-600">Halaman</dt>
+                  <dd className="font-mono font-medium text-ink tabular-nums">{book.page_count}</dd>
+                </div>
+              )}
+            </dl>
+          )}
 
           {book.categories && book.categories.length > 0 && (
             <div className="flex flex-wrap gap-1.5 mb-4">
@@ -233,7 +252,7 @@ export default function BookDetailClient({ bookId }: { bookId: string }) {
                 <Link
                   key={cat}
                   href={`/books?genre=${encodeURIComponent(cat)}`}
-                  className="text-xs bg-forest-100 text-forest-900 px-3 py-1 rounded-full font-medium hover:bg-forest-100/75 transition"
+                  className="text-xs bg-forest-50 border border-forest-100 text-forest-900 px-2.5 py-0.5 rounded-sm font-medium hover:border-forest-500 transition-colors"
                 >
                   {cat}
                 </Link>
@@ -242,20 +261,18 @@ export default function BookDetailClient({ bookId }: { bookId: string }) {
           )}
 
           {book.description && (
-            <p className="text-stone-700 leading-relaxed mb-4">{book.description}</p>
+            <p className="type-prose text-stone-700 text-[0.95rem] mb-5">{book.description}</p>
           )}
 
           {editions.length > 0 && (
-            <div className="mt-4 p-3.5 bg-white border border-warm-border rounded-xl mb-4">
-              <p className="text-xs font-semibold text-stone-500 uppercase tracking-wide mb-2">
-                Edisi / Format Lain
-              </p>
+            <div className="mt-4 p-3.5 bg-white border border-warm-border rounded-lg mb-4">
+              <p className="text-xs font-semibold text-stone-600 mb-2">Edisi dan format lain</p>
               <div className="flex flex-wrap gap-2">
                 {editions.map((ed) => (
                   <Link
                     key={ed.id}
                     href={`/books/${ed.id}`}
-                    className="text-xs border border-stone-300 rounded-lg px-3 py-1.5 hover:border-forest-700 hover:bg-forest-50 transition"
+                    className="text-xs border border-warm-border rounded-md px-3 py-1.5 hover:border-forest-700 hover:bg-forest-50 transition-colors"
                   >
                     {[ed.edition_label, ed.format, ed.language?.toUpperCase(), ed.publisher]
                       .filter(Boolean)
@@ -270,15 +287,15 @@ export default function BookDetailClient({ bookId }: { bookId: string }) {
             <ShelfButton bookId={book.id} />
             <a
               href="#review"
-              className="bg-forest-700 text-cream px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-forest-900 transition shadow-sm"
+              className="bg-forest-700 text-cream px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-forest-900 transition-colors"
             >
-              Lihat Review ({reviews.length})
+              Ulasan ({reviews.length})
             </a>
             <a
               href="#jual"
-              className="bg-white border border-forest-700/35 text-forest-900 px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-forest-50 transition"
+              className="bg-white border border-input-border text-ink px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-paper transition-colors"
             >
-              Beli Bekas ({sellers.length})
+              Penjual bekas ({sellers.length})
             </a>
           </div>
         </div>
@@ -286,20 +303,20 @@ export default function BookDetailClient({ bookId }: { bookId: string }) {
 
       <section
         id="jual"
-        className="bg-paper border border-warm-border rounded-2xl p-6 mb-8 scroll-mt-24"
+        className="bg-paper/75 border border-warm-border rounded-lg p-5 sm:p-6 mb-8 scroll-mt-24"
       >
-        <h2 className="font-serif text-2xl font-bold text-forest-900 mb-1">
-          Dijual oleh {sellers.length} penjual
+        <h2 className="type-section text-ink mb-1">
+          {sellers.length > 0 ? `Tersedia dari ${sellers.length} penjual` : 'Belum ada yang menjual'}
         </h2>
         <p className="text-sm text-stone-600 mb-4">
-          Bandingkan kondisi fisik, reputasi penjual, harga, dan kota sebelum memesan.
+          Cek kondisi fisik, kota penjual, dan harga sebelum memesan.
         </p>
 
         {sellers.length === 0 ? (
           <p className="text-stone-600 text-sm">
             Belum ada yang menjual buku ini.{' '}
-            <Link href="/jual" className="underline font-semibold text-forest-700">
-              Jual bukumu →
+            <Link href="/jual" className="underline font-medium text-forest-700 hover:text-forest-900">
+              Jual bukumu
             </Link>
           </p>
         ) : (
@@ -309,24 +326,24 @@ export default function BookDetailClient({ bookId }: { bookId: string }) {
               return (
                 <div
                   key={l.id}
-                  className="bg-white rounded-xl border border-warm-border p-4 flex flex-wrap items-center gap-4"
+                  className="bg-white rounded-lg border border-warm-border p-4 flex flex-wrap items-center gap-4"
                 >
                   <Link href={`/listings/${l.id}`} className="shrink-0">
                     {thumb ? (
                       <img
                         src={thumb}
                         alt={l.book.title}
-                        className="w-14 h-20 object-cover rounded-lg shadow-sm"
+                        className="w-14 h-20 object-cover rounded-sm border border-warm-border"
                       />
                     ) : (
-                      <div className="w-14 h-20 bg-forest-50 border border-warm-border rounded-lg flex items-center justify-center text-forest-900 font-serif text-xs px-1 text-center">
+                      <div className="w-14 h-20 bg-paper border border-warm-border rounded-sm flex items-center justify-center text-forest-900 font-serif text-xs px-1 text-center">
                         {l.book.title}
                       </div>
                     )}
                   </Link>
 
                   <span
-                    className="w-10 h-10 rounded-full bg-forest-700 text-cream flex items-center justify-center font-bold shrink-0"
+                    className="w-10 h-10 rounded-full bg-forest-700 text-cream flex items-center justify-center font-semibold shrink-0"
                     aria-hidden="true"
                   >
                     {l.user.name.charAt(0).toUpperCase()}
@@ -334,9 +351,9 @@ export default function BookDetailClient({ bookId }: { bookId: string }) {
 
                   <div className="flex-1 min-w-44">
                     <div className="flex flex-wrap items-center gap-2">
-                      <p className="font-semibold text-sm text-stone-900">{l.user.name}</p>
+                      <p className="font-semibold text-sm text-ink">{l.user.name}</p>
                       {typeof l.user.seller_rating_avg === 'number' && (
-                        <span className="text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 font-semibold">
+                        <span className="text-xs px-2 py-0.5 rounded-sm bg-amber-100 text-amber-900 font-medium tabular-nums">
                           ★ {l.user.seller_rating_avg.toFixed(1)}
                         </span>
                       )}
@@ -346,15 +363,15 @@ export default function BookDetailClient({ bookId }: { bookId: string }) {
                     </p>
                   </div>
 
-                  <p className="font-bold text-lg text-forest-900">
-                    {l.price === 0 ? 'Gratis' : `Rp ${l.price.toLocaleString('id-ID')}`}
+                  <p className="font-semibold text-lg text-forest-800 tabular-nums">
+                    {l.price === 0 ? 'Gratis' : `Rp\u00A0${l.price.toLocaleString('id-ID')}`}
                   </p>
 
                   {user ? (
                     <div className="w-full sm:w-auto flex flex-wrap items-center gap-2">
                       <Link
                         href={`/listings/${l.id}`}
-                        className="text-center bg-forest-700 text-cream text-xs font-semibold px-4 py-2 rounded-xl hover:bg-forest-900 transition shadow-sm"
+                        className="text-center bg-forest-700 text-cream text-xs font-medium px-4 py-2 rounded-lg hover:bg-forest-900 transition-colors"
                       >
                         Pesan
                       </Link>
@@ -364,9 +381,9 @@ export default function BookDetailClient({ bookId }: { bookId: string }) {
                   ) : (
                     <Link
                       href={`/login?next=${encodeURIComponent(`/listings/${l.id}`)}`}
-                      className="w-full sm:w-auto text-center bg-forest-700 text-cream text-xs font-semibold px-4 py-2 rounded-xl hover:bg-forest-900 transition shadow-sm"
+                      className="w-full sm:w-auto text-center bg-forest-700 text-cream text-xs font-medium px-4 py-2 rounded-lg hover:bg-forest-900 transition-colors"
                     >
-                      Login untuk Pesan / Chat
+                      Masuk untuk pesan atau chat
                     </Link>
                   )}
                 </div>
@@ -378,11 +395,9 @@ export default function BookDetailClient({ bookId }: { bookId: string }) {
 
       <section
         id="review"
-        className="bg-paper border border-warm-border rounded-2xl p-6 scroll-mt-24"
+        className="bg-paper/75 border border-warm-border rounded-lg p-5 sm:p-6 scroll-mt-24"
       >
-        <h2 className="font-serif text-2xl font-bold text-forest-900 mb-4">
-          Review ({reviews.length})
-        </h2>
+        <h2 className="type-section text-ink mb-4">Ulasan ({reviews.length})</h2>
         <ReviewForm
           bookId={book.id}
           onSubmitted={() => {
@@ -402,7 +417,7 @@ export default function BookDetailClient({ bookId }: { bookId: string }) {
           ))}
         </div>
         {reviews.length === 0 && (
-          <p className="text-stone-600 text-sm mt-4">Belum ada review. Jadilah yang pertama!</p>
+          <p className="text-stone-600 text-sm mt-4">Belum ada ulasan untuk buku ini.</p>
         )}
       </section>
 

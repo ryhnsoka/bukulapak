@@ -3,7 +3,8 @@ import type { ReactNode } from 'react';
 
 export const metadata: Metadata = {
   title: 'Jual Buku',
-  description: 'Pasang listing buku bekasmu lengkap dengan foto kondisi asli dan deskripsi di BukuLapak.',
+  description:
+    'Pasang buku bekas untuk dijual beserta foto kondisi asli dan catatan fisiknya di BukuLapak.',
 };
 
 export default function JualLayout({ children }: { children: ReactNode }) {

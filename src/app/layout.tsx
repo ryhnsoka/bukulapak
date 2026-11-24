@@ -1,23 +1,29 @@
 import type { Metadata } from 'next';
 import { GoogleAnalytics } from '@next/third-parties/google';
-import { Inter, Merriweather } from 'next/font/google';
+import { IBM_Plex_Mono, Newsreader, Plus_Jakarta_Sans } from 'next/font/google';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import ContactButtons from '@/components/ContactButtons';
 import { AuthProvider } from '@/lib/auth';
 import { ToastProvider } from '@/components/ToastProvider';
 import './globals.css';
 
-const merriweather = Merriweather({
+const newsreader = Newsreader({
   subsets: ['latin'],
-  weight: ['400', '700', '900'],
-  variable: '--font-merriweather',
+  style: ['normal', 'italic'],
+  variable: '--font-newsreader',
   display: 'swap',
 });
 
-const inter = Inter({
+const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ['latin'],
-  variable: '--font-inter',
+  variable: '--font-jakarta',
+  display: 'swap',
+});
+
+const ibmPlexMono = IBM_Plex_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500'],
+  variable: '--font-plex-mono',
   display: 'swap',
 });
 
@@ -26,8 +32,7 @@ export const metadata: Metadata = {
     default: 'BukuLapak',
     template: '%s · BukuLapak',
   },
-  description:
-    'Platform komunitas pembaca untuk diskusi buku, review jujur, dan jual-beli buku bekas antarperorangan.',
+  description: 'Katalog ulasan pembaca dan lapak buku bekas antarperorangan.',
 };
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {
@@ -36,8 +41,11 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
   const gaDebug = process.env.NEXT_PUBLIC_GA_DEBUG === 'true';
 
   return (
-    <html lang="id" className={`${merriweather.variable} ${inter.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col bg-cream text-stone-900 font-sans">
+    <html
+      lang="id"
+      className={`${newsreader.variable} ${plusJakartaSans.variable} ${ibmPlexMono.variable} h-full antialiased`}
+    >
+      <body className="min-h-full flex flex-col bg-cream text-ink font-sans">
         <ToastProvider>
           <AuthProvider>
             <a href="#main-content" className="skip-link">
@@ -48,7 +56,6 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
               {children}
             </main>
             <Footer />
-            <ContactButtons />
           </AuthProvider>
         </ToastProvider>
       </body>

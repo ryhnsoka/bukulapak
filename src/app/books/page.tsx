@@ -8,6 +8,7 @@ import { api, type Book } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
 import { useToast } from '@/components/ToastProvider';
 import BookCard from '@/components/BookCard';
+import { BookCoverImage } from '@/components/BookCoverFallback';
 import SkeletonCards, { EmptyState } from '@/components/Skeleton';
 import ErrorState from '@/components/ErrorState';
 
@@ -24,8 +25,8 @@ const GENRES = [
 ];
 
 const SORTS = [
-  { value: 'reviews', label: 'Paling Banyak Direview' },
-  { value: 'rating', label: 'Rating Tertinggi' },
+  { value: 'reviews', label: 'Paling banyak diulas' },
+  { value: 'rating', label: 'Nilai tertinggi' },
   { value: 'newest', label: 'Terbaru' },
   { value: 'title', label: 'Judul (A-Z)' },
 ];
@@ -161,18 +162,16 @@ function BooksInner({ paramKey, urlQ, urlGenre, urlSort, urlPage }: BooksInnerPr
     <div className="max-w-6xl mx-auto px-4 py-10">
       <div className="flex flex-wrap items-end justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-3xl font-bold font-serif text-forest-900 mb-1">
-            Jelajahi &amp; Cari Buku
-          </h1>
+          <h1 className="type-page-title text-ink mb-1">Katalog buku</h1>
           <p className="text-stone-600 text-sm">
-            Cari berdasarkan judul, penulis, atau ISBN di katalog BukuLapak maupun OpenLibrary.
+            Cari judul, penulis, atau nomor ISBN dari koleksi BukuLapak dan arsip OpenLibrary.
           </p>
         </div>
         <Link
           href="/marketplace"
-          className="text-sm font-semibold text-forest-700 underline hover:text-forest-900"
+          className="text-sm font-medium text-forest-700 underline underline-offset-4 hover:text-forest-900"
         >
-          Lihat semua buku bekas di Marketplace →
+          Lihat buku bekas di Marketplace
         </Link>
       </div>
 
@@ -186,12 +185,12 @@ function BooksInner({ paramKey, urlQ, urlGenre, urlSort, urlPage }: BooksInnerPr
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="cth: Laut Bercerita / Andrea Hirata / 978..."
-          className="flex-1 min-w-52 border border-stone-300 rounded-xl px-4 py-2.5 text-sm bg-white"
+          className="flex-1 min-w-52 border border-input-border rounded-lg px-4 py-2.5 text-sm bg-white"
         />
         <button
           type="submit"
           disabled={loading}
-          className="bg-forest-700 text-cream px-6 py-2.5 rounded-xl text-sm font-semibold hover:bg-forest-900 transition disabled:opacity-50 cursor-pointer"
+          className="bg-forest-700 text-cream px-6 py-2.5 rounded-lg text-sm font-medium hover:bg-forest-900 transition-colors disabled:opacity-50 cursor-pointer"
         >
           {loading ? 'Mencari…' : 'Cari'}
         </button>
@@ -202,7 +201,7 @@ function BooksInner({ paramKey, urlQ, urlGenre, urlSort, urlPage }: BooksInnerPr
               setQ('');
               pushParams({ q: '', page: 1 });
             }}
-            className="border border-stone-300 bg-white text-stone-700 px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-stone-100 transition cursor-pointer"
+            className="border border-input-border bg-white text-ink px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-paper transition-colors cursor-pointer"
           >
             Reset
           </button>
@@ -219,9 +218,9 @@ function BooksInner({ paramKey, urlQ, urlGenre, urlSort, urlPage }: BooksInnerPr
               id="genre-filter"
               value={urlGenre}
               onChange={(e) => pushParams({ genre: e.target.value, page: 1 })}
-              className="border border-stone-300 rounded-xl px-3 py-1.5 text-sm bg-white"
+              className="border border-input-border rounded-lg px-3 py-1.5 text-sm bg-white"
             >
-              <option value="">Semua Genre</option>
+              <option value="">Semua genre</option>
               {GENRES.map((g) => (
                 <option key={g} value={g}>
                   {g}
@@ -237,7 +236,7 @@ function BooksInner({ paramKey, urlQ, urlGenre, urlSort, urlPage }: BooksInnerPr
               id="sort-filter"
               value={urlSort}
               onChange={(e) => pushParams({ sort: e.target.value, page: 1 })}
-              className="border border-stone-300 rounded-xl px-3 py-1.5 text-sm bg-white"
+              className="border border-input-border rounded-lg px-3 py-1.5 text-sm bg-white"
             >
               {SORTS.map((s) => (
                 <option key={s.value} value={s.value}>
@@ -250,14 +249,16 @@ function BooksInner({ paramKey, urlQ, urlGenre, urlSort, urlPage }: BooksInnerPr
             <button
               type="button"
               onClick={() => pushParams({ genre: '', page: 1 })}
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-forest-100 text-forest-900 text-xs font-semibold hover:bg-forest-100/75 cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-forest-100 text-forest-900 text-xs font-medium hover:bg-forest-100/75 cursor-pointer"
             >
               <span>Genre: {urlGenre}</span>
               <span aria-hidden="true">✕</span>
             </button>
           )}
           {loaded && !loading && (
-            <span className="text-xs text-stone-500 ml-auto">{total} buku di katalog</span>
+            <span className="text-xs text-stone-600 ml-auto tabular-nums">
+              {total} buku di katalog
+            </span>
           )}
         </div>
       )}
@@ -282,12 +283,10 @@ function BooksInner({ paramKey, urlQ, urlGenre, urlSort, urlPage }: BooksInnerPr
       {!loading && !error && localBooks.length > 0 && (
         <section className="mb-10">
           {urlQ && (
-            <div className="flex flex-wrap items-center gap-2 mb-4">
-              <span className="text-xs font-bold uppercase tracking-wider bg-forest-700 text-cream px-2.5 py-1 rounded-full">
-                Katalog BukuLapak
-              </span>
-              <span className="text-sm text-stone-600">
-                {localBooks.length} buku sudah terdaftar (bisa langsung lihat review &amp; penjual)
+            <div className="flex flex-wrap items-baseline justify-between gap-2 pb-2 mb-4 border-b border-warm-border">
+              <h2 className="font-sans font-semibold text-sm text-ink">Di katalog BukuLapak</h2>
+              <span className="text-xs text-stone-600 tabular-nums">
+                {localBooks.length} judul tersedia dengan ulasan dan daftar penjual
               </span>
             </div>
           )}
@@ -301,12 +300,10 @@ function BooksInner({ paramKey, urlQ, urlGenre, urlSort, urlPage }: BooksInnerPr
 
       {!loading && !error && externalBooks.length > 0 && (
         <section>
-          <div className="flex flex-wrap items-center gap-2 mb-4 border-t border-warm-border pt-6">
-            <span className="text-xs font-bold uppercase tracking-wider bg-amber-100 text-amber-900 px-2.5 py-1 rounded-full">
-              Hasil Eksternal (OpenLibrary)
-            </span>
-            <span className="text-sm text-stone-600">
-              Belum tersimpan di BukuLapak. Simpan untuk membuka halaman buku, menulis review, atau menjualnya.
+          <div className="flex flex-wrap items-baseline justify-between gap-2 pb-2 mb-4 border-b border-warm-border pt-2">
+            <h2 className="font-sans font-semibold text-sm text-ink">Dari OpenLibrary</h2>
+            <span className="text-xs text-stone-600">
+              Belum masuk katalog. Simpan dulu supaya bisa diulas atau dijual.
             </span>
           </div>
           <div className="grid gap-5 grid-cols-2 md:grid-cols-4">
@@ -323,20 +320,20 @@ function BooksInner({ paramKey, urlQ, urlGenre, urlSort, urlPage }: BooksInnerPr
             type="button"
             disabled={page <= 1}
             onClick={() => pushParams({ page: page - 1 })}
-            className="px-4 py-2 rounded-xl border border-stone-300 bg-white text-sm disabled:opacity-40 hover:bg-stone-100 cursor-pointer"
+            className="px-4 py-2 rounded-lg border border-input-border bg-white text-sm text-ink disabled:opacity-40 hover:bg-paper cursor-pointer"
           >
-            ← Sebelumnya
+            Sebelumnya
           </button>
-          <span className="text-sm text-stone-600">
+          <span className="text-sm text-stone-600 tabular-nums">
             Halaman {page} dari {lastPage}
           </span>
           <button
             type="button"
             disabled={page >= lastPage}
             onClick={() => pushParams({ page: page + 1 })}
-            className="px-4 py-2 rounded-xl border border-stone-300 bg-white text-sm disabled:opacity-40 hover:bg-stone-100 cursor-pointer"
+            className="px-4 py-2 rounded-lg border border-input-border bg-white text-sm text-ink disabled:opacity-40 hover:bg-paper cursor-pointer"
           >
-            Berikutnya →
+            Berikutnya
           </button>
         </div>
       )}
@@ -345,24 +342,34 @@ function BooksInner({ paramKey, urlQ, urlGenre, urlSort, urlPage }: BooksInnerPr
 }
 
 function SearchResultCard({ book }: { book: Book }) {
+  const subtitle = book.authors?.length
+    ? book.authors.join(', ')
+    : book.isbn
+      ? `ISBN ${book.isbn}`
+      : undefined;
+
   return (
-    <article className="bg-white border border-warm-border rounded-xl overflow-hidden flex flex-col">
-      {book.cover_url ? (
-        <img src={book.cover_url} alt={book.title} loading="lazy" className="w-full h-52 object-cover" />
-      ) : (
-        <div className="w-full h-52 bg-forest-50 flex items-center justify-center text-forest-900 font-serif font-bold px-4 text-center">
-          {book.title}
-        </div>
-      )}
-      <div className="p-4 flex-1 flex flex-col">
-        <span className="inline-block w-fit text-xs font-semibold bg-stone-100 text-stone-700 px-2.5 py-0.5 rounded-full mb-2">
-          Eksternal
+    <article className="bg-white border border-warm-border rounded-lg overflow-hidden flex flex-col h-full">
+      <div className="w-full aspect-[2/3] overflow-hidden bg-paper">
+        <BookCoverImage
+          key={book.cover_url ?? 'none'}
+          src={book.cover_url}
+          alt={book.title}
+          title={book.title}
+          subtitle={subtitle}
+          loading="lazy"
+          imgClassName="w-full h-full object-cover"
+        />
+      </div>
+      <div className="p-3.5 sm:p-4 flex-1 flex flex-col">
+        <span className="inline-block w-fit text-[11px] font-medium bg-paper text-stone-700 px-2 py-0.5 rounded-sm mb-2">
+          OpenLibrary
         </span>
-        <h3 className="font-bold font-serif text-forest-900 leading-snug mb-1 line-clamp-2">
+        <h3 className="type-card-title text-sm sm:text-base text-ink mb-1 line-clamp-2">
           {book.title}
         </h3>
-        <p className="text-xs text-stone-600 mb-3">
-          {book.authors?.join(', ') || 'Penulis tidak diketahui'}
+        <p className="text-xs text-stone-600 mb-3 line-clamp-1">
+          {book.authors?.join(', ') || 'Penulis tidak tercatat'}
         </p>
         <div className="mt-auto">
           <SaveBookButton book={book} />
@@ -380,14 +387,14 @@ function SaveBookButton({ book }: { book: Book }) {
 
   async function save() {
     if (!user || !token) {
-      showToast('Login terlebih dahulu untuk menyimpan buku ke katalog.', 'info');
+      showToast('Masuk terlebih dahulu untuk menyimpan buku ke katalog.', 'info');
       return;
     }
     setSaving(true);
     try {
       const res = await api.storeBook(book, token);
       setSavedId(res.data.book.id);
-      showToast(`"${book.title}" tersimpan ke katalog BukuLapak.`, 'success');
+      showToast(`"${book.title}" ditambahkan ke katalog.`, 'success');
     } catch (err: unknown) {
       showToast(err instanceof Error ? err.message : 'Gagal menyimpan buku.', 'error');
     } finally {
@@ -399,9 +406,9 @@ function SaveBookButton({ book }: { book: Book }) {
     return (
       <Link
         href={`/books/${savedId}`}
-        className="block w-full text-center bg-forest-700 text-cream text-xs px-3 py-2 rounded-xl font-semibold hover:bg-forest-900 transition"
+        className="block w-full text-center bg-forest-700 text-cream text-xs px-3 py-2 rounded-lg font-medium hover:bg-forest-900 transition-colors"
       >
-        Buka Halaman Buku →
+        Buka halaman buku
       </Link>
     );
   }
@@ -410,9 +417,9 @@ function SaveBookButton({ book }: { book: Book }) {
     return (
       <Link
         href="/login?next=/books"
-        className="block w-full text-center border border-stone-300 text-stone-700 text-xs px-3 py-2 rounded-xl font-semibold hover:bg-stone-50 transition"
+        className="block w-full text-center border border-input-border text-ink text-xs px-3 py-2 rounded-lg font-medium hover:bg-paper transition-colors"
       >
-        Login untuk Simpan
+        Masuk untuk menyimpan
       </Link>
     );
   }
@@ -422,9 +429,9 @@ function SaveBookButton({ book }: { book: Book }) {
       type="button"
       onClick={save}
       disabled={saving}
-      className="w-full border border-forest-700 text-forest-900 text-xs font-semibold px-4 py-2 rounded-xl hover:bg-forest-50 transition disabled:opacity-50 cursor-pointer"
+      className="w-full border border-forest-700 text-forest-900 text-xs font-medium px-4 py-2 rounded-lg hover:bg-forest-50 transition-colors disabled:opacity-50 cursor-pointer"
     >
-      {saving ? 'Menyimpan…' : '+ Simpan ke BukuLapak'}
+      {saving ? 'Menyimpan…' : 'Simpan ke katalog'}
     </button>
   );
 }

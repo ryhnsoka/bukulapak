@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 
 export const metadata: Metadata = {
   title: 'Komunitas',
-  description: 'Diskusi isi buku, klub baca terjadwal, dan topik pembaca di BukuLapak.',
+  description: 'Ruang klub baca dan diskusi isi buku antar pembaca di BukuLapak.',
 };
 
 export default function KomunitasLayout({ children }: { children: ReactNode }) {

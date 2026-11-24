@@ -22,32 +22,33 @@ export default function HorizontalShelf({
 
   return (
     <section className="mb-12">
-      <div className="flex items-center justify-between gap-3 mb-5">
-        <div className="flex items-center gap-3">
-          <div className="w-1.5 h-7 bg-forest-700 rounded-full" aria-hidden="true" />
-          <h2 className="font-serif text-xl sm:text-2xl font-bold text-forest-900">{title}</h2>
-        </div>
+      <div className="flex items-baseline justify-between gap-3 pb-2.5 mb-5 border-b border-warm-border">
+        <h2 className="type-section text-ink">{title}</h2>
 
         <div className="flex items-center gap-2 shrink-0">
           <button
             type="button"
             onClick={() => scrollBy(-280)}
             aria-label={`Geser ${title} ke kiri`}
-            className="hidden sm:inline-flex w-8 h-8 rounded-full bg-white border border-stone-300 text-stone-700 hover:bg-stone-100 items-center justify-center text-sm cursor-pointer transition"
+            className="hidden sm:inline-flex w-7 h-7 rounded-md bg-white border border-warm-border text-stone-700 hover:border-stone-400 hover:text-ink items-center justify-center cursor-pointer transition-colors"
           >
-            ←
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.75" d="M15 19l-7-7 7-7" />
+            </svg>
           </button>
           <button
             type="button"
             onClick={() => scrollBy(280)}
             aria-label={`Geser ${title} ke kanan`}
-            className="hidden sm:inline-flex w-8 h-8 rounded-full bg-white border border-stone-300 text-stone-700 hover:bg-stone-100 items-center justify-center text-sm cursor-pointer transition"
+            className="hidden sm:inline-flex w-7 h-7 rounded-md bg-white border border-warm-border text-stone-700 hover:border-stone-400 hover:text-ink items-center justify-center cursor-pointer transition-colors"
           >
-            →
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.75" d="M9 5l7 7-7 7" />
+            </svg>
           </button>
           <Link
             href={href}
-            className="text-xs sm:text-sm font-semibold underline text-forest-700 hover:text-forest-900 ml-1"
+            className="text-xs sm:text-sm font-medium text-forest-700 hover:text-forest-900 hover:underline underline-offset-4 ml-1"
           >
             {hrefLabel}
           </Link>

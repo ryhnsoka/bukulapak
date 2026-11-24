@@ -4,7 +4,7 @@ import ListingDetailClient from '@/components/ListingDetailClient';
 
 export const metadata: Metadata = {
   title: 'Detail Listing',
-  description: 'Lihat foto kondisi asli buku bekas, reputasi penjual, chat langsung, atau buat pesanan di BukuLapak.',
+  description: 'Cek foto kondisi buku bekas, detail penjual, dan pesan langsung di BukuLapak.',
 };
 
 async function ListingDetailLoader({ params }: { params: Promise<{ id: string }> }) {
